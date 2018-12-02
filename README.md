@@ -1,5 +1,4 @@
 # AdventOfCode2018
-AdventOfCode2018
 
 Along with the fun of Advent of Code, this repo would like to accomplish the 5th stage of this meme 😜
 
