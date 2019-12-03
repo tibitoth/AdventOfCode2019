@@ -32,6 +32,8 @@ namespace AdventOfCode2018.Infrastructure
             var input = await response.Content.ReadAsStreamAsync();
 
             var puzzleSolver = _puzzleSolverFactory.Create(day);
+
+            input = await puzzleSolver.PrepareInputAsync(input);
             var answer = part == 1 ? await puzzleSolver.SolvePart1Async(input) : await puzzleSolver.SolvePart2Async(input);
 
             response = await _client.PostAsync(

@@ -1,4 +1,5 @@
 using AdventOfCode2019.Puzzles.Day1;
+using AdventOfCode2019.Puzzles.Tests.Extensions;
 using System;
 using System.IO;
 using System.Text;
@@ -17,7 +18,7 @@ namespace AdventOfCode2019.Puzzles.Tests
             var input = new string[] { "14", "14", "1969", "100756" };
 
             // Act
-            var result = await subject.SolvePart1Async(new MemoryStream(Encoding.UTF8.GetBytes(string.Join('\n', input))));
+            var result = await subject.SolvePart1Async(string.Join('\n', input).ToMemoryStream());
 
             // Assert
             var expectedSum = 2 + 2 + 654 + 33583;
