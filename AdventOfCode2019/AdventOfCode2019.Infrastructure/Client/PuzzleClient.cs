@@ -26,21 +26,21 @@ namespace AdventOfCode2018.Infrastructure
             _logger = logger;
         }
 
-        public async Task SolveAndSendAsync(int day)
+        public async Task SolveAndSendAsync(int day, int part)
         {
             var response = await _client.GetAsync($"/{_optionsAccessor.Value.Year}/day/{day}/input");
             var input = await response.Content.ReadAsStreamAsync();
 
             var puzzleSolver = _puzzleSolverFactory.Create(day);
-            var answer = await puzzleSolver.SolveAsync(input);
+            var answer = part == 1 ? await puzzleSolver.SolvePart1Async(input) : await puzzleSolver.SolvePart2Async(input);
 
             response = await _client.PostAsync(
                 $"/{_optionsAccessor.Value.Year}/day/{day}/answer",
                 new FormUrlEncodedContent(
                     new Dictionary<string, string>()
                     {
-                        { "level", day.ToString() },
-                        { "answer", answer }
+                        { "level", part.ToString() },
+                        { "answer", answer },
                     }));
 
             response.EnsureSuccessStatusCode();

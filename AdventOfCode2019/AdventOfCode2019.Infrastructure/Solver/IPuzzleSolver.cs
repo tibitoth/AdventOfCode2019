@@ -6,6 +6,7 @@ namespace AdventOfCode2018.Infrastructure
 {
     public interface IPuzzleSolver
     {
-        Task<string> SolveAsync(Stream input);
+        Task<string> SolvePart1Async(Stream input);
+        Task<string> SolvePart2Async(Stream input);
     }
 }

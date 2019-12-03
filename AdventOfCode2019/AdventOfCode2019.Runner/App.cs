@@ -15,6 +15,10 @@ namespace AdventOfCode2019.Runner
         [Range(1, 28)]
         public int Day { get; set; }
 
+        [Option("-p", Description = "Part of the excercise")]
+        [Range(1, 2)]
+        public int Part { get; set; } = 1;
+
         private readonly PuzzleClient _puzzleClient;
 
         public App(PuzzleClient puzzleClient)
@@ -24,7 +28,7 @@ namespace AdventOfCode2019.Runner
 
         public async Task OnExecute()
         {
-            await _puzzleClient.SolveAndSendAsync(Day);
+            await _puzzleClient.SolveAndSendAsync(Day, Part);
         }
     }
 }
