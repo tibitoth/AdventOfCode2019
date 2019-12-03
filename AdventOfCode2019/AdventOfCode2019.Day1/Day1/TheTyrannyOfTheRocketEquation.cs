@@ -11,9 +11,21 @@ namespace AdventOfCode2019.Puzzles.Day1
     [Day(1)]
     public class TheTyrannyOfTheRocketEquation : IPuzzleSolver
     {
-        public Task<string> SolveAsync(Stream input)
+        public async Task<string> SolveAsync(Stream input)
         {
-            throw new NotImplementedException();
+            var sum = 0;
+
+            var reader = new StreamReader(input);
+            while (!reader.EndOfStream)
+            {
+                var line = await reader.ReadLineAsync();
+                if (int.TryParse(line, out int x))
+                {
+                    sum += x / 3 - 2;
+                }
+            }
+
+            return sum.ToString();
         }
     }
 }
