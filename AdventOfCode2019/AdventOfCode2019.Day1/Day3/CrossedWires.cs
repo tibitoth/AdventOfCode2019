@@ -33,7 +33,7 @@ namespace AdventOfCode2019.Puzzles.Day3
             }
 
             var (xLenght, yLength, startx, starty) = GetFieldLength(wires);
-            var field = new byte[xLenght, yLength];
+            var field = new Cell[xLenght, yLength];
             int x = startx;
             int y = starty;
             int minManhattanDistance = int.MaxValue;
@@ -61,9 +61,9 @@ namespace AdventOfCode2019.Puzzles.Day3
                                 break;
                         }
 
-                        field[x, y] |= (byte)(1 << wireId);
+                        field[x, y].AddWire(wireId);
                         
-                        if ((~(1 << wireId) & field[x, y]) > 0)
+                        if (field[x,y].IsThereOtherWires(wireId))
                         {
                             var manhattanDistanceFromStart = Math.Abs(startx - x) + Math.Abs(starty - y);
                             if (manhattanDistanceFromStart < minManhattanDistance)
