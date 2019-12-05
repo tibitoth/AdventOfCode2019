@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AdventOfCode2019.Puzzles.Extensions
 {
@@ -14,6 +15,12 @@ namespace AdventOfCode2019.Puzzles.Extensions
             {
                 yield return await reader.ReadLineAsync();
             }
+        }
+
+        public static async Task<string> ReadLineAsync(this Stream stream)
+        {
+            using var reader = new StreamReader(stream);
+            return await reader.ReadLineAsync();
         }
     }
 }

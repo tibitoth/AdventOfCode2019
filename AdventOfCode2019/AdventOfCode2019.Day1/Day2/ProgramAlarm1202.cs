@@ -16,32 +16,22 @@ namespace AdventOfCode2019.Puzzles.Day2
     {
         public async Task<Stream> PrepareInputAsync(Stream input)
         {
-            await foreach (var line in input.AsAsyncEnumerable())
-            {
-                var firstIndex = line.IndexOf(',');
-                var secondIndex = line.IndexOf(',', firstIndex + 1);
-                var thirdIndex = line.IndexOf(',', secondIndex + 1);
+            var line = await input.ReadLineAsync();
+            var firstIndex = line.IndexOf(',');
+            var secondIndex = line.IndexOf(',', firstIndex + 1);
+            var thirdIndex = line.IndexOf(',', secondIndex + 1);
 
-                var modified = line.Substring(0, firstIndex + 1) + "12,2" + line.Substring(thirdIndex);
+            var modified = line.Substring(0, firstIndex + 1) + "12,2" + line.Substring(thirdIndex);
 
-                // we expect only one line
-                return new MemoryStream(Encoding.UTF8.GetBytes(modified));
-            }
-
-            return null;
+            return new MemoryStream(Encoding.UTF8.GetBytes(modified));
         }
 
         public async Task<string> SolvePart1Async(Stream input)
         {
             int[] registers = null;
 
-            await foreach (var line in input.AsAsyncEnumerable())
-            {
-                registers = line.Split(',').Select(x => int.Parse(x)).ToArray();
-
-                // we expect only one line
-                break;
-            }
+            var line = await input.ReadLineAsync();
+            registers = line.Split(',').Select(x => int.Parse(x)).ToArray();
 
             // run intcode program
             for (int i = 0; registers[i] != 99 && i < registers.Length; i += 4)

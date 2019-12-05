@@ -41,13 +41,8 @@ namespace AdventOfCode2019.Puzzles.Day4
 
             if (input != null)
             {
-                await foreach (var line in input.AsAsyncEnumerable())
-                {
-                    (start, end) = GetRange(line);
-
-                    //we expect only one line 
-                    break;
-                }
+                var line = await input.ReadLineAsync();
+                (start, end) = GetRange(line);
             }
             else
             {
