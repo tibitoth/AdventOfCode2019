@@ -45,6 +45,8 @@ namespace AdventOfCode2018.Infrastructure
                         { "answer", answer },
                     }));
 
+            _logger.LogInformation("Sending [{answer}] answer for {day} day {part} part", answer, day, part);
+
             response.EnsureSuccessStatusCode();
 
             var html = await response.Content.ReadAsStringAsync();
@@ -53,7 +55,7 @@ namespace AdventOfCode2018.Infrastructure
                 throw new Exception(html);
             }
 
-            _logger.LogInformation("Day {Day} has been succeeded", day);
+            _logger.LogInformation("{day} day {part} part has been succeeded", day, part);
         }
     }
 }

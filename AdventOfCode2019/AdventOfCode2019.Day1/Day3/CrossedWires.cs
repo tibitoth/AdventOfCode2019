@@ -16,6 +16,16 @@ namespace AdventOfCode2019.Puzzles.Day3
     {
         public async Task<string> SolvePart1Async(Stream input)
         {
+            return (await SolveAsync(input)).Part1Answer;
+        }
+
+        public async Task<string> SolvePart2Async(Stream input)
+        {
+            return (await SolveAsync(input)).Part2Answer;
+        }
+
+        private async Task<(string Part1Answer, string Part2Answer)> SolveAsync(Stream input)
+        {
             var wires = new List<Wire>();
 
             await foreach (var line in input.AsAsyncEnumerable())
@@ -37,10 +47,12 @@ namespace AdventOfCode2019.Puzzles.Day3
             int x = startx;
             int y = starty;
             int minManhattanDistance = int.MaxValue;
+            int minDistanceOnWire = int.MaxValue;
             byte wireId = 0;
 
             foreach (var wire in wires)
             {
+                int wireLenght = 0;
                 foreach (var part in wire.Parts)
                 {
                     for (int i = 1; i <= part.Length; i++)
@@ -61,14 +73,20 @@ namespace AdventOfCode2019.Puzzles.Day3
                                 break;
                         }
 
-                        field[x, y].AddWire(wireId);
-                        
-                        if (field[x,y].IsCrossingWithOtherWires(wireId))
+                        field[x, y].AddWire(wireId, ++wireLenght);
+
+                        if (field[x, y].IsCrossingWithOtherWires(wireId))
                         {
                             var manhattanDistanceFromStart = Math.Abs(startx - x) + Math.Abs(starty - y);
                             if (manhattanDistanceFromStart < minManhattanDistance)
                             {
                                 minManhattanDistance = manhattanDistanceFromStart;
+                            }
+
+                            var distanceOnWire = wireLenght + field[x, y].GetOtherWireLength(wireId).Sum();
+                            if (distanceOnWire < minDistanceOnWire)
+                            {
+                                minDistanceOnWire = distanceOnWire;
                             }
                         }
                     }
@@ -79,7 +97,7 @@ namespace AdventOfCode2019.Puzzles.Day3
                 y = starty;
             }
 
-            return minManhattanDistance.ToString();
+            return (Part1Answer: minManhattanDistance.ToString(), Part2Answer: minDistanceOnWire.ToString());
         }
 
         private (int xLength, int yLength, int startX, int startY) GetFieldLength(List<Wire> wires)
@@ -129,11 +147,6 @@ namespace AdventOfCode2019.Puzzles.Day3
                 startX: - minX,
                 startY: - minY
             );
-        }
-
-        public Task<string> SolvePart2Async(Stream input)
-        {
-            throw new NotImplementedException();
         }
     }
 }
