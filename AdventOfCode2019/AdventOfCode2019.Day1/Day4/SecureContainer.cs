@@ -20,6 +20,16 @@ namespace AdventOfCode2019.Puzzles.Day4
 
         public async Task<string> SolvePart1Async(Stream input)
         {
+            return await SolveAsync(input, IsValidPart1);
+        }
+
+        public async Task<string> SolvePart2Async(Stream input)
+        {
+            return await SolveAsync(input, IsValidPart2);
+        }
+
+        private async Task<string> SolveAsync(Stream input, Func<string, bool> passwordIsValid)
+        {
             int start = 0;
             int end = 0;
 
@@ -46,20 +56,20 @@ namespace AdventOfCode2019.Puzzles.Day4
 
             var count = Enumerable.Range(start, end - start)
                 .Select(x => x.ToString("000000"))
-                .Where(IsValid)
+                .Where(passwordIsValid)
                 .Count();
 
             return count.ToString();
         }
 
-        public Task<string> SolvePart2Async(Stream input)
+        internal bool IsValidPart1(string x)
         {
-            throw new NotImplementedException();
+            return IsNeverDecrease(x) && HasTwoSameAdjacentDigitsPart1(x);
         }
 
-        internal bool IsValid(string x)
+        internal bool IsValidPart2(string x)
         {
-            return IsNeverDecrease(x) && HasTwoSameAdjacentDigits(x);
+            return IsNeverDecrease(x) && HasTwoSameAdjacentDigitsPart2(x);
         }
 
         private bool IsNeverDecrease(string x)
@@ -73,7 +83,7 @@ namespace AdventOfCode2019.Puzzles.Day4
             return true;
         }
 
-        private bool HasTwoSameAdjacentDigits(string x)
+        private bool HasTwoSameAdjacentDigitsPart1(string x)
         {
             for (int i = 0; i < x.Length - 1; i++)
             {
@@ -82,6 +92,20 @@ namespace AdventOfCode2019.Puzzles.Day4
             }
 
             return false;
+        }
+
+        private bool HasTwoSameAdjacentDigitsPart2(string x)
+        {
+            var twoSameAdjacentDigits = new List<char>();
+            for (int i = 0; i < x.Length - 1; i++)
+            {
+                if (x[i] == x[i + 1])
+                {
+                    twoSameAdjacentDigits.Add(x[i]);
+                }
+            }
+
+            return twoSameAdjacentDigits.Any(d => !x.Contains(new string(d, 3)));
         }
     }
 }
