@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -28,15 +29,19 @@ namespace AdventOfCode2018.Infrastructure
 
         public async Task SolveAndSendAsync(int day, int part)
         {
-            var response = await _client.GetAsync($"/{_optionsAccessor.Value.Year}/day/{day}/input");
-            var input = await response.Content.ReadAsStreamAsync();
-
             var puzzleSolver = _puzzleSolverFactory.Create(day);
+            Stream input = null;
 
-            input = await puzzleSolver.PrepareInputAsync(input);
+            if (puzzleSolver.IsInputFromHttp)
+            {
+                var inputResponse = await _client.GetAsync($"/{_optionsAccessor.Value.Year}/day/{day}/input");
+                input = await inputResponse.Content.ReadAsStreamAsync();
+                input = await puzzleSolver.PrepareInputAsync(input);
+            }
+            
             var answer = part == 1 ? await puzzleSolver.SolvePart1Async(input) : await puzzleSolver.SolvePart2Async(input);
 
-            response = await _client.PostAsync(
+            var response = await _client.PostAsync(
                 $"/{_optionsAccessor.Value.Year}/day/{day}/answer",
                 new FormUrlEncodedContent(
                     new Dictionary<string, string>()
