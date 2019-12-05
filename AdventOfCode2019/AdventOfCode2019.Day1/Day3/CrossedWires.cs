@@ -63,7 +63,7 @@ namespace AdventOfCode2019.Puzzles.Day3
 
                         field[x, y].AddWire(wireId);
                         
-                        if (field[x,y].IsThereOtherWires(wireId))
+                        if (field[x,y].IsCrossingWithOtherWires(wireId))
                         {
                             var manhattanDistanceFromStart = Math.Abs(startx - x) + Math.Abs(starty - y);
                             if (manhattanDistanceFromStart < minManhattanDistance)
