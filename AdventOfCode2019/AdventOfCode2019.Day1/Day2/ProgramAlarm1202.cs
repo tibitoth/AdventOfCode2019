@@ -1,5 +1,6 @@
 ﻿using AdventOfCode2018.Infrastructure;
 using AdventOfCode2019.Infrastructure;
+using AdventOfCode2019.Puzzles.Day2.Models;
 using AdventOfCode2019.Puzzles.Extensions;
 using System;
 using System.Collections.Generic;
@@ -28,32 +29,18 @@ namespace AdventOfCode2019.Puzzles.Day2
 
         public async Task<string> SolvePart1Async(Stream input)
         {
-            int[] registers = null;
-
             var line = await input.ReadLineAsync();
-            registers = line.Split(',').Select(x => int.Parse(x)).ToArray();
+            int[] registers = line.Split(',').Select(x => int.Parse(x)).ToArray();
 
-            // run intcode program
-            for (int i = 0; registers[i] != 99 && i < registers.Length; i += 4)
-            {
-                if (registers[i] == 1)
-                {
-                    registers[registers[i + 3]] = registers[registers[i + 1]] + registers[registers[i + 2]];
-                }
-                else if (registers[i] == 2)
-                {
-                    registers[registers[i + 3]] = registers[registers[i + 1]] * registers[registers[i + 2]];
-                }
-            }
+            var program = new IntcodeProgram(new ProgramMemory(registers));
+            program.Run();
 
-            return registers[0].ToString();
+            return program[0].ToString();
         }
 
         public Task<string> SolvePart2Async(Stream input)
         {
             throw new NotImplementedException();
         }
-
-
     }
 }
