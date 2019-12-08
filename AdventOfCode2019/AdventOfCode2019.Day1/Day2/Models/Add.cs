@@ -6,14 +6,14 @@ namespace AdventOfCode2019.Puzzles.Day2.Models
 {
     public class Add : TwoOperandInstructionBase
     {
-        public Add(Span<int> operands)
-            : base(operands[1], operands[2], operands[3])
+        public Add(Span<int> memory, int pointer)
+            : base(memory, pointer)
         {
         }
 
-        public override void Operate(ProgramMemory memory)
+        protected override int ExecuteCore(int param1, int param2)
         {
-            memory.Registers[Target] = memory.Registers[LeftParam] + memory.Registers[RightParam];
+            return param1 + param2;
         }
     }
 }

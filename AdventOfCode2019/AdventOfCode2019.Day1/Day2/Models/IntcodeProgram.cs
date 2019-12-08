@@ -3,23 +3,30 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace AdventOfCode2019.Puzzles.Day2.Models
 {
-    public class IntcodeProgram
+    public class IntcodeProgram : IDisposable
     {
         private readonly ProgramMemory _programMemory;
+
+        public StreamWriter _outputStreamWriter;
+        public StreamReader _inputStreamReader;
 
         public IntcodeProgram(ProgramMemory programMemory)
         {
             _programMemory = programMemory;
         }
 
-        public void Run()
+        public void Run(Stream input, Stream output)
         {
+            _inputStreamReader = new StreamReader(input);
+            _outputStreamWriter = new StreamWriter(output);
+
             foreach (var instruction in Load(_programMemory))
             {
-                instruction.Operate(_programMemory);
+                instruction.Execute(_programMemory);
             }
         }
 
@@ -35,6 +42,7 @@ namespace AdventOfCode2019.Puzzles.Day2.Models
                 var instruction = CreateInstruction(i);
                 if (instruction is Halt)
                 {
+                    _outputStreamWriter.Flush();
                     yield break;
                 }
                 else
@@ -47,12 +55,20 @@ namespace AdventOfCode2019.Puzzles.Day2.Models
 
         private InstructionBase CreateInstruction(int address)
         {
-            return _programMemory.Registers[address] switch
+            return (_programMemory.Registers[address] % 100) switch
             {
                 99 => new Halt(),
-                1 => new Add(_programMemory.Registers.AsSpan().Slice(address)),
-                2 => new Multiply(_programMemory.Registers.AsSpan().Slice(address)),
+                1 => new Add(_programMemory.Registers.AsSpan(), address),
+                2 => new Multiply(_programMemory.Registers.AsSpan(), address),
+                3 => new Input(_programMemory.Registers.AsSpan(), address, _inputStreamReader),
+                4 => new Output(_programMemory.Registers.AsSpan(), address, _outputStreamWriter),
             };
+        }
+
+        public void Dispose()
+        {
+            _inputStreamReader.Dispose();
+            _outputStreamWriter.Dispose();
         }
     }
 }

@@ -4,6 +4,7 @@ using AdventOfCode2019.Puzzles.Day1;
 using AdventOfCode2019.Puzzles.Day2;
 using AdventOfCode2019.Puzzles.Day3;
 using AdventOfCode2019.Puzzles.Day4;
+using AdventOfCode2019.Puzzles.Day5;
 using AdventOfCode2019.Runner;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +37,7 @@ namespace AdventOfCode2018.Day1
                     services.AddTransient<ProgramAlarm1202>();
                     services.AddTransient<CrossedWires>();
                     services.AddTransient<SecureContainer>();
+                    services.AddTransient<SunnyWithAChanceOfAsteroids>();
 
                     services.AddHttpClient<PuzzleClient>()
                         .ConfigureHttpClient(c => c.BaseAddress = new Uri(option.BaseUrl))

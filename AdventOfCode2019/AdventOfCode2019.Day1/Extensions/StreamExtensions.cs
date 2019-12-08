@@ -10,6 +10,11 @@ namespace AdventOfCode2019.Puzzles.Extensions
     {
         public static async IAsyncEnumerable<string> AsAsyncEnumerable(this Stream stream)
         {
+            if (stream.CanSeek)
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+            }
+
             using var reader = new StreamReader(stream);
             while (!reader.EndOfStream)
             {

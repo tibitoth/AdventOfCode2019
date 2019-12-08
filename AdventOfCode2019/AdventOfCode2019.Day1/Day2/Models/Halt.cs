@@ -8,9 +8,8 @@ namespace AdventOfCode2019.Puzzles.Day2.Models
     {
         public override int InstructionLength => 1;
 
-        public override void Operate(ProgramMemory memory)
+        public override void Execute(ProgramMemory memory)
         {
-            throw new HaltException();
         }
     }
 }
