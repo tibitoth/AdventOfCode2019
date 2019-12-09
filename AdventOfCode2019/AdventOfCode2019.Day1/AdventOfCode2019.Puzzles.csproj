@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AdventOfCode2019.Infrastructure\AdventOfCode2019.Infrastructure.csproj" />
+    <ProjectReference Include="..\AdventOfCode2019.Puzzles.Intcode\AdventOfCode2019.Puzzles.Intcode.csproj" />
   </ItemGroup>
 
 </Project>
