@@ -1,13 +1,22 @@
 ﻿using System;
-using System.Threading.Tasks;
 
-namespace AdventOfCode2019.Puzzles.Day2.Models
+namespace AdventOfCode2019.Puzzles.Intcode.Instructions
 {
     public abstract class InstructionBase
     {
         public abstract int InstructionLength { get; }
 
-        public abstract void Execute(ProgramMemory memory);
+        protected int InstructionAddress { get; }
+
+        public virtual int Execute(ProgramMemory memory)
+        {
+            return InstructionAddress + InstructionLength;
+        }
+
+        protected InstructionBase(int instructionAddress)
+        {
+            InstructionAddress = instructionAddress;
+        }
 
         protected int GetParameterValue(Span<int> memory, int instructionAddress, int parameterPosition)
         {

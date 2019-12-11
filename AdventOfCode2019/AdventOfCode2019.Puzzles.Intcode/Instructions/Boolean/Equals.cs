@@ -1,9 +1,6 @@
-﻿using AdventOfCode2019.Puzzles.Day2.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
-namespace AdventOfCode2019.Puzzles.Intcode.Instructions
+namespace AdventOfCode2019.Puzzles.Intcode.Instructions.Boolean
 {
     public class Equals : TwoOperandInstructionBase
     {

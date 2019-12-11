@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace AdventOfCode2019.Puzzles.Day2.Models
+namespace AdventOfCode2019.Puzzles.Intcode.Instructions
 {
     public abstract class TwoOperandInstructionBase : InstructionBase
     {
         public override int InstructionLength => 4;
 
-        public TwoOperandInstructionBase(Span<int> memory, int instructionAddress)
+        public TwoOperandInstructionBase(Span<int> memory, int instructionAddress) 
+            : base(instructionAddress)
         {
             FirstParam = GetParameterValue(memory, instructionAddress, 1);
             SecondParam = GetParameterValue(memory, instructionAddress, 2);
@@ -20,9 +19,11 @@ namespace AdventOfCode2019.Puzzles.Day2.Models
         public int SecondParam { get; set; }
         public int TargetAddress { get; set; }
 
-        public override void Execute(ProgramMemory memory)
+        public override int Execute(ProgramMemory memory)
         {
             memory.Registers[TargetAddress] = ExecuteCore(FirstParam, SecondParam);
+
+            return base.Execute(memory);
         }
 
         protected abstract int ExecuteCore(int param1, int param2);

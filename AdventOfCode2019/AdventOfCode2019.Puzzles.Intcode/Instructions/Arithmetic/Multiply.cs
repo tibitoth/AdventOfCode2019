@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace AdventOfCode2019.Puzzles.Day2.Models
+namespace AdventOfCode2019.Puzzles.Intcode.Instructions.Arithmetic
 {
     public class Multiply : TwoOperandInstructionBase
     {

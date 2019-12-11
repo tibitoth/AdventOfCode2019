@@ -1,6 +1,5 @@
 ﻿using AdventOfCode2018.Infrastructure;
 using AdventOfCode2019.Infrastructure;
-using AdventOfCode2019.Puzzles.Day2.Models;
 using AdventOfCode2019.Puzzles.Extensions;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Unicode;
 using System.Threading.Tasks;
+using AdventOfCode2019.Puzzles.Intcode;
 
 namespace AdventOfCode2019.Puzzles.Day2
 {
