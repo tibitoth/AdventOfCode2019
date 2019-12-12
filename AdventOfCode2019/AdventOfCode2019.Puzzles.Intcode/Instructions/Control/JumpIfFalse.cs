@@ -9,7 +9,7 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.Control
         {
         }
 
-        public override int Execute(ProgramMemory memory)
+        public override int Execute(Span<int> memory)
         {
             return Param == 0 ? AddressIf : base.Execute(memory);
         }

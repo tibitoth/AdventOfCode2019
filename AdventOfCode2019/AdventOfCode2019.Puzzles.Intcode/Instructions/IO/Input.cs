@@ -14,10 +14,10 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.IO
             _streamReader = streamReader;
         }
 
-        public override int Execute(ProgramMemory memory)
+        public override int Execute(Span<int> memory)
         {
             var input = _streamReader.ReadLine();
-            memory.Registers[Param] = int.Parse(input);
+            memory[Param] = int.Parse(input);
 
             return base.Execute(memory);
         }

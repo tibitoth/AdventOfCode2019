@@ -20,7 +20,7 @@ namespace AdventOfCode2019.Puzzles.Day5
             var line = await input.ReadLineAsync();
             int[] registers = line.Split(',').Select(x => int.Parse(x)).ToArray();
 
-            using var program = new IntcodeProgram(new ProgramMemory(registers));
+            using var program = new IntcodeProgram(registers);
             var output = new MemoryStream();
             program.Run("1".ToMemoryStream(), output);
             return await output.AsAsyncEnumerable().LastAsync();

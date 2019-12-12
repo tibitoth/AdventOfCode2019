@@ -23,5 +23,11 @@ namespace AdventOfCode2019.Puzzles.Tests.Day5
             // Assert
             Assert.Equal("16348437", result);
         }
+
+        public async Task InputSouldEqualsTo8ThenOutput1()
+        {
+            var subject = new SunnyWithAChanceOfAsteroids();
+            var input = "3,9,8,9,10,9,4,9,99,-1,8";
+        }
     }
 }

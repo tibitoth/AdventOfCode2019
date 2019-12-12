@@ -11,16 +11,16 @@ namespace AdventOfCode2019.Puzzles.Intcode
 {
     public class IntcodeProgram : IDisposable
     {
-        private readonly ProgramMemory _programMemory;
+        private readonly int[] _registers;
 
         private StreamReader _inputStreamReader;
         private StreamWriter _outputStreamWriter;
 
         private int _instructionPointer;
 
-        public IntcodeProgram(ProgramMemory programMemory)
+        public IntcodeProgram(int[] registers)
         {
-            _programMemory = programMemory;
+            _registers = registers;
         }
 
         public void Run(Stream input, Stream output)
@@ -28,20 +28,20 @@ namespace AdventOfCode2019.Puzzles.Intcode
             _inputStreamReader = new StreamReader(input);
             _outputStreamWriter = new StreamWriter(output);
 
-            foreach (var instruction in Load(_programMemory))
+            foreach (var instruction in Load())
             {
-                _instructionPointer = instruction.Execute(_programMemory);
+                _instructionPointer = instruction.Execute(_registers);
             }
         }
 
         public int this[int index]
         {
-            get => _programMemory.Registers[index];
+            get => _registers[index];
         }
 
-        private IEnumerable<InstructionBase> Load(ProgramMemory memory)
+        private IEnumerable<InstructionBase> Load()
         {
-            while (_instructionPointer < memory.Registers.Length)
+            while (_instructionPointer < _registers.Length)
             {
                 var instruction = CreateInstruction(_instructionPointer);
                 if (instruction is Halt)
@@ -58,17 +58,17 @@ namespace AdventOfCode2019.Puzzles.Intcode
 
         private InstructionBase CreateInstruction(int address)
         {
-            return (_programMemory.Registers[address] % 100) switch
+            return (_registers[address] % 100) switch
             {
                 99 => new Halt(address),
-                1 => new Add(_programMemory.Registers.AsSpan(), address),
-                2 => new Multiply(_programMemory.Registers.AsSpan(), address),
-                3 => new Input(_programMemory.Registers.AsSpan(), address, _inputStreamReader),
-                4 => new Output(_programMemory.Registers.AsSpan(), address, _outputStreamWriter),
-                5 => new JumpIfTrue(_programMemory.Registers.AsSpan(), address),
-                6 => new JumpIfFalse(_programMemory.Registers.AsSpan(), address),
-                7 => new LessThan(_programMemory.Registers.AsSpan(), address),
-                8 => new Equals(_programMemory.Registers.AsSpan(), address),
+                1 => new Add(_registers.AsSpan(), address),
+                2 => new Multiply(_registers.AsSpan(), address),
+                3 => new Input(_registers.AsSpan(), address, _inputStreamReader),
+                4 => new Output(_registers.AsSpan(), address, _outputStreamWriter),
+                5 => new JumpIfTrue(_registers.AsSpan(), address),
+                6 => new JumpIfFalse(_registers.AsSpan(), address),
+                7 => new LessThan(_registers.AsSpan(), address),
+                8 => new Equals(_registers.AsSpan(), address),
             };
         }
 

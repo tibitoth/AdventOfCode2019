@@ -32,7 +32,7 @@ namespace AdventOfCode2019.Puzzles.Day2
             var line = await input.ReadLineAsync();
             int[] registers = line.Split(',').Select(x => int.Parse(x)).ToArray();
 
-            using var program = new IntcodeProgram(new ProgramMemory(registers));
+            using var program = new IntcodeProgram(registers);
             program.Run(Console.OpenStandardInput(), Console.OpenStandardOutput());
 
             return program[0].ToString();

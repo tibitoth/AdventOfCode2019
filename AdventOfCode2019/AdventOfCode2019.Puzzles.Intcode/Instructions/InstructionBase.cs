@@ -8,7 +8,7 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions
 
         protected int InstructionAddress { get; }
 
-        public virtual int Execute(ProgramMemory memory)
+        public virtual int Execute(Span<int> memory)
         {
             return InstructionAddress + InstructionLength;
         }

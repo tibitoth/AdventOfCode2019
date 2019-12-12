@@ -19,9 +19,9 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions
         public int SecondParam { get; set; }
         public int TargetAddress { get; set; }
 
-        public override int Execute(ProgramMemory memory)
+        public override int Execute(Span<int> memory)
         {
-            memory.Registers[TargetAddress] = ExecuteCore(FirstParam, SecondParam);
+            memory[TargetAddress] = ExecuteCore(FirstParam, SecondParam);
 
             return base.Execute(memory);
         }

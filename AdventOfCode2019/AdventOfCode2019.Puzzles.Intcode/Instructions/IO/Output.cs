@@ -14,7 +14,7 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.IO
             _streamWriter = streamWriter;
         }
 
-        public override int Execute(ProgramMemory memory)
+        public override int Execute(Span<int> memory)
         {
             _streamWriter.WriteLine(Param);
 
