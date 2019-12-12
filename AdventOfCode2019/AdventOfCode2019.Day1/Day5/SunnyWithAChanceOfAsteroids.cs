@@ -26,9 +26,15 @@ namespace AdventOfCode2019.Puzzles.Day5
             return await output.AsAsyncEnumerable().LastAsync();
         }
 
-        public Task<string> SolvePart2Async(Stream input)
+        public async Task<string> SolvePart2Async(Stream input)
         {
-            throw new NotImplementedException();
+            var line = await input.ReadLineAsync();
+            int[] registers = line.Split(',').Select(x => int.Parse(x)).ToArray();
+
+            using var program = new IntcodeProgram(registers);
+            var output = new MemoryStream();
+            program.Run("5".ToMemoryStream(), output);
+            return await output.AsAsyncEnumerable().LastAsync();
         }
     }
 }
