@@ -15,16 +15,23 @@ namespace AdventOfCode2019.Puzzles.Day2
     [Day(2)]
     public class ProgramAlarm1202 : IPuzzleSolver
     {
-        public async Task<Stream> PrepareInputAsync(Stream input)
+        public async Task<Stream> PrepareInputAsync(Stream input, int part)
         {
-            var line = await input.ReadLineAsync();
-            var firstIndex = line.IndexOf(',');
-            var secondIndex = line.IndexOf(',', firstIndex + 1);
-            var thirdIndex = line.IndexOf(',', secondIndex + 1);
+            if (part == 1)
+            {
+                var line = await input.ReadLineAsync();
+                var firstIndex = line.IndexOf(',');
+                var secondIndex = line.IndexOf(',', firstIndex + 1);
+                var thirdIndex = line.IndexOf(',', secondIndex + 1);
 
-            var modified = line.Substring(0, firstIndex + 1) + "12,2" + line.Substring(thirdIndex);
+                var modified = line.Substring(0, firstIndex + 1) + "12,2" + line.Substring(thirdIndex);
 
-            return new MemoryStream(Encoding.UTF8.GetBytes(modified));
+                return new MemoryStream(Encoding.UTF8.GetBytes(modified));
+            }
+            else
+            {
+                return input;
+            }
         }
 
         public async Task<string> SolvePart1Async(Stream input)
@@ -38,9 +45,28 @@ namespace AdventOfCode2019.Puzzles.Day2
             return program[0].ToString();
         }
 
-        public Task<string> SolvePart2Async(Stream input)
+        public async Task<string> SolvePart2Async(Stream input)
         {
-            throw new NotImplementedException();
+            var line = await input.ReadLineAsync();
+            int[] registers = line.Split(',').Select(x => int.Parse(x)).ToArray();
+
+            for (int noun = 0; noun < 100; noun++)
+            {
+                for (int verb = 0; verb < 100; verb++)
+                {
+                    registers[1] = noun;
+                    registers[2] = verb;
+                    using var program = new IntcodeProgram(registers.ToArray()); // array copy
+                    program.Run(Console.OpenStandardInput(), Console.OpenStandardOutput());
+
+                    if (program[0] == 19690720)
+                    {
+                        return (100 * noun + verb).ToString();
+                    }
+                }
+            }
+
+            return string.Empty;
         }
     }
 }

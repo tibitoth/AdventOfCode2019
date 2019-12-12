@@ -20,7 +20,7 @@ namespace AdventOfCode2019.Puzzles.Tests.Day2
             var input = "1,9,10,3,2,3,11,0,99,30,40,50";
 
             // Act
-            var modified = await subject.PrepareInputAsync(input.ToMemoryStream());
+            var modified = await subject.PrepareInputAsync(input.ToMemoryStream(), 1);
             string[] registers = null;
             await foreach (var line in modified.AsAsyncEnumerable())
             {

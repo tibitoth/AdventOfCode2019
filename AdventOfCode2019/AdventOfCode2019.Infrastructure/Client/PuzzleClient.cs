@@ -36,7 +36,7 @@ namespace AdventOfCode2018.Infrastructure
             {
                 var inputResponse = await _client.GetAsync($"/{_optionsAccessor.Value.Year}/day/{day}/input");
                 input = await inputResponse.Content.ReadAsStreamAsync();
-                input = await puzzleSolver.PrepareInputAsync(input);
+                input = await puzzleSolver.PrepareInputAsync(input, part);
             }
             
             var answer = part == 1 ? await puzzleSolver.SolvePart1Async(input) : await puzzleSolver.SolvePart2Async(input);
