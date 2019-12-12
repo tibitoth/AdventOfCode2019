@@ -12,7 +12,7 @@ namespace AdventOfCode2019.Puzzles.Tests.Day6
     public class UniversalOrbitMapTests
     {
         [Fact]
-        public async Task DetailedExample()
+        public async Task Part1_DetailedExample()
         {
             // Arrange
             var subject = new UniversalOrbitMap();
@@ -37,7 +37,7 @@ K)L";
         }
 
         [Fact]
-        public async Task DetailedExampleNotOrderedInput()
+        public async Task Part1_DetailedExampleNotOrderedInput()
         {
             // Arrange
             var subject = new UniversalOrbitMap();
@@ -62,17 +62,58 @@ K)L";
         }
 
         [Fact]
-        public async Task ConcrateExcercise()
+        public async Task Part1_ConcrateExcercise()
         {
             // Arrange
             var subject = new UniversalOrbitMap();
-            using var input = File.OpenRead("Day6/Part1Input.txt");
+            using var input = File.OpenRead("Day6/Input.txt");
 
             // Act
             var result = await subject.SolvePart1Async(input);
 
             // Assert
             Assert.Equal("160040", result);
+        }
+
+        [Fact]
+        public async Task Part2_DetailedExample()
+        {
+            // Arrange
+            var subject = new UniversalOrbitMap();
+            var input = 
+                @"COM)B
+B)C
+C)D
+D)E
+E)F
+B)G
+G)H
+D)I
+E)J
+J)K
+K)L
+K)YOU
+I)SAN";
+
+            // Act
+            var result = await subject.SolvePart2Async(input.ToMemoryStream());
+
+            // Assert
+            Assert.Equal("4", result);
+        }
+
+        [Fact]
+        public async Task Part2_ConcrateExcercise()
+        {
+            // Arrange
+            var subject = new UniversalOrbitMap();
+            using var input = File.OpenRead("Day6/Input.txt");
+
+            // Act
+            var result = await subject.SolvePart2Async(input);
+
+            // Assert
+            Assert.Equal("373", result);
         }
     }
 }
