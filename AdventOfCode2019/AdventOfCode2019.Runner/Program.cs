@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
 using AdventOfCode2019.Puzzles.Day6;
+using AdventOfCode2019.Puzzles.Day7;
 
 namespace AdventOfCode2018.Day1
 {
@@ -40,6 +41,7 @@ namespace AdventOfCode2018.Day1
                     services.AddTransient<SecureContainer>();
                     services.AddTransient<SunnyWithAChanceOfAsteroids>();
                     services.AddTransient<UniversalOrbitMap>();
+                    services.AddTransient<AmplificationCircuit>();
 
                     services.AddHttpClient<PuzzleClient>()
                         .ConfigureHttpClient(c => c.BaseAddress = new Uri(option.BaseUrl))
