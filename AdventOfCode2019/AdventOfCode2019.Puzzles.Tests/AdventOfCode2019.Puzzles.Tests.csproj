@@ -16,4 +16,10 @@
     <ProjectReference Include="..\AdventOfCode2019.Day1\AdventOfCode2019.Puzzles.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Day6\Part1Input.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
