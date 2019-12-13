@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode2019.Puzzles", "AdventOfCode2019.Day1\AdventOfCode2019.Puzzles.csproj", "{91D12C3C-961F-47F2-B1B8-DF76CC36E0F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode2019.Puzzles", "AdventOfCode2019.Puzzles\AdventOfCode2019.Puzzles.csproj", "{91D12C3C-961F-47F2-B1B8-DF76CC36E0F1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode2019.Infrastructure", "AdventOfCode2019.Infrastructure\AdventOfCode2019.Infrastructure.csproj", "{17CC07F1-5AF1-4BBD-B6D9-3EF2974BE672}"
 EndProject

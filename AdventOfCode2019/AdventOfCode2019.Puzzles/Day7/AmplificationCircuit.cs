@@ -22,6 +22,12 @@ namespace AdventOfCode2019.Puzzles.Day7
             return (await GetMaxThrusterSignalAsync(input, PhaseSettingsType.OneShot)).MaxSignal.ToString();
         }
 
+        public async Task<string> SolvePart2Async(Stream input)
+        {
+            return (await GetMaxThrusterSignalAsync(input, PhaseSettingsType.FeedbackLoop)).MaxSignal.ToString();
+
+        }
+
         internal async Task<(int MaxSignal, int[] MaxPermutation)> GetMaxThrusterSignalAsync(Stream input, PhaseSettingsType phaseSettingsType)
         {
             var line = await input.ReadLineAsync();
@@ -71,12 +77,6 @@ namespace AdventOfCode2019.Puzzles.Day7
             }
 
             return (max, maxPermutation);
-        }
-
-        public async Task<string> SolvePart2Async(Stream input)
-        {
-            return (await GetMaxThrusterSignalAsync(input, PhaseSettingsType.FeedbackLoop)).MaxSignal.ToString();
-
         }
     }
 }
