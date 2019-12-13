@@ -7,24 +7,24 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions
     {
         public override int InstructionLength => 4;
 
-        public TwoOperandInstructionBase(Span<int> memory, int instructionAddress) 
-            : base(instructionAddress)
+        protected TwoOperandInstructionBase(ProgramContext context) 
+            : base(context)
         {
-            FirstParam = GetParameterValue(memory, instructionAddress, 1);
-            SecondParam = GetParameterValue(memory, instructionAddress, 2);
+            FirstParam = GetParameterValue(1);
+            SecondParam = GetParameterValue(2);
 
-            TargetAddress = memory[instructionAddress + 3];
+            TargetAddress = context.Memory[context.InstructionPointer + 3];
         }
 
         public int FirstParam { get; set; }
         public int SecondParam { get; set; }
         public int TargetAddress { get; set; }
 
-        public override async Task<int> ExecuteAsync(Memory<int> memory)
+        public override async Task<int> ExecuteAsync()
         {
-            memory.Span[TargetAddress] = ExecuteCore(FirstParam, SecondParam);
+            ProgramContext.Memory[TargetAddress] = ExecuteCore(FirstParam, SecondParam);
 
-            return await base.ExecuteAsync(memory);
+            return await base.ExecuteAsync();
         }
 
         protected abstract int ExecuteCore(int param1, int param2);

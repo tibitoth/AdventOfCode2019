@@ -10,11 +10,11 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.Control
 
         public int AddressIf { get; set; }
 
-        public JumpIf(Span<int> memory, int instructionAddress)
-            : base(instructionAddress)
+        protected JumpIf(ProgramContext context)
+            : base(context)
         {
-            Param = GetParameterValue(memory, instructionAddress, 1);
-            AddressIf = GetParameterValue(memory, instructionAddress, 2);
+            Param = GetParameterValue(1);
+            AddressIf = GetParameterValue(2);
         }
     }
 }

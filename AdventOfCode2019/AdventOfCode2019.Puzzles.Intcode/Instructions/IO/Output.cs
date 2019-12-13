@@ -9,18 +9,18 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.IO
     {
         private readonly ChannelWriter<int> _writer;
 
-        public Output(Span<int> memory, int address, ChannelWriter<int> writer)
-            : base(address)
+        public Output(ProgramContext context, ChannelWriter<int> writer)
+            : base(context)
         {
-            Param = GetParameterValue(memory, address, 1);
+            Param = GetParameterValue(1);
             _writer = writer;
         }
 
-        public override async Task<int> ExecuteAsync(Memory<int> memory)
+        public override async Task<int> ExecuteAsync()
         {
             await _writer.WriteAsync(Param);
 
-            return await base.ExecuteAsync(memory);
+            return await base.ExecuteAsync();
         }
     }
 }

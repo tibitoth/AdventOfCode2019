@@ -6,7 +6,7 @@
 
         public int Param { get; set; }
 
-        protected OneParamInstruction(int instructionAddress) : base(instructionAddress)
+        protected OneParamInstruction(ProgramContext context) : base(context)
         {
         }
     }

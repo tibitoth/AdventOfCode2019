@@ -4,8 +4,8 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.Boolean
 {
     public class Equals : TwoOperandInstructionBase
     {
-        public Equals(Span<int> memory, int instructionAddress)
-            : base(memory, instructionAddress)
+        public Equals(ProgramContext context)
+            : base(context)
         {
         }
 

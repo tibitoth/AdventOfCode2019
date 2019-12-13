@@ -7,30 +7,34 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions
     {
         public abstract int InstructionLength { get; }
 
-        protected int InstructionAddress { get; }
+        protected ProgramContext ProgramContext { get; }
 
-        public virtual Task<int> ExecuteAsync(Memory<int> memory)
+        public virtual Task<int> ExecuteAsync()
         {
-            return Task.FromResult(InstructionAddress + InstructionLength);
+            return Task.FromResult(ProgramContext.InstructionPointer + InstructionLength);
         }
 
-        protected InstructionBase(int instructionAddress)
+        protected InstructionBase(ProgramContext context)
         {
-            InstructionAddress = instructionAddress;
+            ProgramContext = context;
         }
 
-        protected int GetParameterValue(Span<int> memory, int instructionAddress, int parameterPosition)
+        protected int GetParameterValue(int parameterPosition)
         {
             int digit = (int)Math.Pow(10, parameterPosition) * 100;
-            var instructionCode = memory[instructionAddress];
+            var instructionCode = ProgramContext.Memory[ProgramContext.InstructionPointer];
 
-            if ((instructionCode % digit * 10 / digit) == 0) // position mode
+            if ((instructionCode % digit * 10 / digit) == 0) // absolute position mode
             {
-                return memory[memory[instructionAddress + parameterPosition]];
+                return ProgramContext.Memory[0 + ProgramContext.Memory[ProgramContext.InstructionPointer + parameterPosition]];
             }
             else if ((instructionCode % digit * 10 / digit) == 1) // immediate mode (value)
             {
-                return memory[instructionAddress + parameterPosition];
+                return ProgramContext.Memory[ProgramContext.InstructionPointer + parameterPosition];
+            }
+            else if ((instructionCode % digit * 10 / digit) == 2) // relative position mode 
+            {
+                return ProgramContext.Memory[ProgramContext.RelativeBase + ProgramContext.Memory[ProgramContext.InstructionPointer + parameterPosition]];
             }
             else
             {

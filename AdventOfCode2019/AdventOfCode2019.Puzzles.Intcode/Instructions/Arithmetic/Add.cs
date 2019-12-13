@@ -4,8 +4,8 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.Arithmetic
 {
     public class Add : TwoOperandInstructionBase
     {
-        public Add(Span<int> memory, int pointer)
-            : base(memory, pointer)
+        public Add(ProgramContext context)
+            : base(context)
         {
         }
 

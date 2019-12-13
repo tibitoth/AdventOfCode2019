@@ -4,8 +4,8 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.Boolean
 {
     public class LessThan : TwoOperandInstructionBase
     {
-        public LessThan(Span<int> memory, int instructionAddress) 
-            : base(memory, instructionAddress)
+        public LessThan(ProgramContext context) 
+            : base(context)
         {
         }
 

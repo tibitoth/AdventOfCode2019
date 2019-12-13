@@ -4,7 +4,7 @@
     {
         public override int InstructionLength => 1;
 
-        public Halt(int instructionAddress) : base(instructionAddress)
+        public Halt(ProgramContext context) : base(context)
         {
         }
     }

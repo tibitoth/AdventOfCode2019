@@ -9,19 +9,18 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.IO
     {
         private readonly ChannelReader<int> _reader;
 
-        public Input(Span<int> memory, int address, ChannelReader<int> reader)
-            : base(address)
+        public Input(ProgramContext context, ChannelReader<int> reader)
+            : base(context)
         {
-            Param = memory[address + 1];
+            Param = ProgramContext.Memory[ProgramContext.InstructionPointer + 1];
             _reader = reader;
         }
 
-        public override async Task<int> ExecuteAsync(Memory<int> memory)
+        public override async Task<int> ExecuteAsync()
         {
-            var x = await _reader.ReadAsync();
-            memory.Span[Param] = x;
+            ProgramContext.Memory[Param] = await _reader.ReadAsync();
 
-            return await base.ExecuteAsync(memory);
+            return await base.ExecuteAsync();
         }
     }
 }

@@ -5,14 +5,14 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.Control
 {
     public class JumpIfTrue : JumpIf
     {
-        public JumpIfTrue(Span<int> memory, int instructionAddress)
-            : base(memory, instructionAddress)
+        public JumpIfTrue(ProgramContext context)
+            : base(context)
         {
         }
 
-        public override async Task<int> ExecuteAsync(Memory<int> memory)
+        public override async Task<int> ExecuteAsync()
         {
-            return Param > 0 ? AddressIf : await base.ExecuteAsync(memory);
+            return Param > 0 ? AddressIf : await base.ExecuteAsync();
         }
     }
 }
