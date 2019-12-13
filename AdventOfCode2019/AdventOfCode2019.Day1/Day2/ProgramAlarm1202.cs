@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Unicode;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using AdventOfCode2019.Puzzles.Intcode;
 
@@ -39,8 +40,8 @@ namespace AdventOfCode2019.Puzzles.Day2
             var line = await input.ReadLineAsync();
             int[] registers = line.Split(',').Select(x => int.Parse(x)).ToArray();
 
-            using var program = new IntcodeProgram(registers);
-            program.Run(Console.OpenStandardInput(), Console.OpenStandardOutput());
+            var program = new IntcodeProgram(registers);
+            await program.RunAsync(Channel.CreateUnbounded<int>(), Channel.CreateUnbounded<int>());
 
             return program[0].ToString();
         }
@@ -56,8 +57,8 @@ namespace AdventOfCode2019.Puzzles.Day2
                 {
                     registers[1] = noun;
                     registers[2] = verb;
-                    using var program = new IntcodeProgram(registers.ToArray()); // array copy
-                    program.Run(Console.OpenStandardInput(), Console.OpenStandardOutput());
+                    var program = new IntcodeProgram(registers.ToArray()); // array copy
+                    await program.RunAsync(Channel.CreateUnbounded<int>(), Channel.CreateUnbounded<int>());
 
                     if (program[0] == 19690720)
                     {

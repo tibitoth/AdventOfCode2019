@@ -1,25 +1,27 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 
 namespace AdventOfCode2019.Puzzles.Intcode.Instructions.IO
 {
     public class Input : OneParamInstruction
     {
-        private readonly StreamReader _streamReader;
+        private readonly ChannelReader<int> _reader;
 
-        public Input(Span<int> memory, int address, StreamReader streamReader)
+        public Input(Span<int> memory, int address, ChannelReader<int> reader)
             : base(address)
         {
             Param = memory[address + 1];
-            _streamReader = streamReader;
+            _reader = reader;
         }
 
-        public override int Execute(Span<int> memory)
+        public override async Task<int> ExecuteAsync(Memory<int> memory)
         {
-            var input = _streamReader.ReadLine();
-            memory[Param] = int.Parse(input);
+            var x = await _reader.ReadAsync();
+            memory.Span[Param] = x;
 
-            return base.Execute(memory);
+            return await base.ExecuteAsync(memory);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace AdventOfCode2019.Puzzles.Intcode.Instructions
 {
@@ -19,11 +20,11 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions
         public int SecondParam { get; set; }
         public int TargetAddress { get; set; }
 
-        public override int Execute(Span<int> memory)
+        public override async Task<int> ExecuteAsync(Memory<int> memory)
         {
-            memory[TargetAddress] = ExecuteCore(FirstParam, SecondParam);
+            memory.Span[TargetAddress] = ExecuteCore(FirstParam, SecondParam);
 
-            return base.Execute(memory);
+            return await base.ExecuteAsync(memory);
         }
 
         protected abstract int ExecuteCore(int param1, int param2);

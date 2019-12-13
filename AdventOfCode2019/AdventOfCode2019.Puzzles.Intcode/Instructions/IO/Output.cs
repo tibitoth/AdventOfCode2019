@@ -1,24 +1,26 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 
 namespace AdventOfCode2019.Puzzles.Intcode.Instructions.IO
 {
     public class Output : OneParamInstruction
     {
-        private readonly StreamWriter _streamWriter;
+        private readonly ChannelWriter<int> _writer;
 
-        public Output(Span<int> memory, int address, StreamWriter streamWriter)
+        public Output(Span<int> memory, int address, ChannelWriter<int> writer)
             : base(address)
         {
             Param = GetParameterValue(memory, address, 1);
-            _streamWriter = streamWriter;
+            _writer = writer;
         }
 
-        public override int Execute(Span<int> memory)
+        public override async Task<int> ExecuteAsync(Memory<int> memory)
         {
-            _streamWriter.WriteLine(Param);
+            await _writer.WriteAsync(Param);
 
-            return base.Execute(memory);
+            return await base.ExecuteAsync(memory);
         }
     }
 }

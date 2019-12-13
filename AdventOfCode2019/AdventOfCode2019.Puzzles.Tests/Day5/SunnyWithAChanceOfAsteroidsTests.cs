@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using AdventOfCode2019.Puzzles.Extensions;
 using AdventOfCode2019.Puzzles.Intcode;
@@ -42,77 +43,77 @@ namespace AdventOfCode2019.Puzzles.Tests.Day5
             Assert.Equal("6959377", result);
         }
 
-        private async Task TestIntcodeProgramAsync(int[] memory, string input, string expectedOutput)
+        private async Task TestIntcodeProgramAsync(int[] memory, int input, int expectedOutput)
         {
             // Arrange
             var program = new IntcodeProgram(memory);
-            var output = new MemoryStream();
+            var output = Channel.CreateUnbounded<int>();
 
             // Act
-            program.Run(input.ToMemoryStream(), output);
+            await program.RunAsync(await input.ToChannelAsync(), output);
 
             // Assert
-            var result = await output.AsAsyncEnumerable().FirstOrDefaultAsync();
+            var result = await output.Reader.ReadAsync();
             Assert.Equal(expectedOutput, result);
         }
 
         [Theory]
-        [InlineData("8", "1")]
-        [InlineData("9", "0")]
-        public async Task EqualsPositionMode(string input, string expectedOutput)
+        [InlineData(8, 1)]
+        [InlineData(9, 0)]
+        public async Task EqualsPositionMode(int input, int expectedOutput)
         {
             await TestIntcodeProgramAsync(new[] { 3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8 }, input, expectedOutput);
         }
 
         [Theory]
-        [InlineData("8", "1")]
-        [InlineData("9", "0")]
-        public async Task EqualsImmediateMode(string input, string expectedOutput)
+        [InlineData(8, 1)]
+        [InlineData(9, 0)]
+        public async Task EqualsImmediateMode(int input, int expectedOutput)
         {
             await TestIntcodeProgramAsync(new[] { 3, 3, 1108, -1, 8, 3, 4, 3, 99 }, input, expectedOutput);
         }
 
         [Theory]
-        [InlineData("7", "1")]
-        [InlineData("8", "0")]
-        [InlineData("9", "0")]
-        public async Task LessThanPossitionMode(string input, string expectedOutput)
+        [InlineData(7, 1)]
+        [InlineData(8, 0)]
+        [InlineData(9, 0)]
+        public async Task LessThanPossitionMode(int input, int expectedOutput)
         {
             await TestIntcodeProgramAsync(new[] { 3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8 }, input, expectedOutput);
         }
 
         [Theory]
-        [InlineData("7", "1")]
-        [InlineData("8", "0")]
-        [InlineData("9", "0")]
-        public async Task LessThanImmediateMode(string input, string expectedOutput)
+        [InlineData(7, 1)]
+        [InlineData(8, 0)]
+        [InlineData(9, 0)]
+        public async Task LessThanImmediateMode(int input, int expectedOutput)
         {
             await TestIntcodeProgramAsync(new[] { 3, 3, 1107, -1, 8, 3, 4, 3, 99 }, input, expectedOutput);
         }
 
         [Theory]
-        [InlineData("0", "0")]
-        [InlineData("1", "1")]
-        [InlineData("9", "1")]
-        public async Task JumpPositionMode(string input, string expectedOutput)
+        [InlineData(0, 0)]
+        [InlineData(1, 1)]
+        [InlineData(9, 1)]
+        public async Task JumpPositionMode(int input, int expectedOutput)
         {
             await TestIntcodeProgramAsync(new[] { 3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9 }, input, expectedOutput);
         }
 
         [Theory]
-        [InlineData("0", "0")]
-        [InlineData("1", "1")]
-        [InlineData("9", "1")]
-        public async Task JumpImmediateMode(string input, string expectedOutput)
+        [InlineData(0, 0)]
+        [InlineData(1, 1)]
+        [InlineData(9, 1)]
+        public async Task JumpImmediateMode(int input, int expectedOutput)
         {
             await TestIntcodeProgramAsync(new[] { 3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1 }, input, expectedOutput);
         }
 
         [Theory]
-        [InlineData("7", "999")]
-        [InlineData("8", "1000")]
-        [InlineData("9", "1001")]
-        public async Task LargerExample(string input, string expectedOutput)
+        [InlineData(7, 999)]
+        [InlineData(8, 1000)]
+        [InlineData(9, 1001)]
+        public async Task LargerExample(int input, int expectedOutput)
         {
             await TestIntcodeProgramAsync(new[] { 3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
                 1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,

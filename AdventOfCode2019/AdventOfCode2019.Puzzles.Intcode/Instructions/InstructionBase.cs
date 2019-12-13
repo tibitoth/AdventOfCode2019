@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace AdventOfCode2019.Puzzles.Intcode.Instructions
 {
@@ -8,9 +9,9 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions
 
         protected int InstructionAddress { get; }
 
-        public virtual int Execute(Span<int> memory)
+        public virtual Task<int> ExecuteAsync(Memory<int> memory)
         {
-            return InstructionAddress + InstructionLength;
+            return Task.FromResult(InstructionAddress + InstructionLength);
         }
 
         protected InstructionBase(int instructionAddress)

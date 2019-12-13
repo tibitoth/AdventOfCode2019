@@ -27,5 +27,7 @@ namespace AdventOfCode2019.Puzzles.Extensions
             using var reader = new StreamReader(stream);
             return await reader.ReadLineAsync();
         }
+
+        public static Stream ToMemoryStream(this string s) => new MemoryStream(Encoding.UTF8.GetBytes(s));
     }
 }

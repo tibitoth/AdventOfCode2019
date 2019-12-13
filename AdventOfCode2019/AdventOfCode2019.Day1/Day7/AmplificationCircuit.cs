@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using AdventOfCode2018.Infrastructure;
 using AdventOfCode2019.Infrastructure;
@@ -37,25 +38,21 @@ namespace AdventOfCode2019.Puzzles.Day7
                     amplifiers[i] = new IntcodeProgram(registers.ToArray()); //copy
                 }
 
-                var output = "0".ToMemoryStream();
+                var outputChannel = Channel.CreateUnbounded<int>();
+                await outputChannel.Writer.WriteAsync(0);
 
                 for (int i = 0; i < amplifiers.Length; i++)
                 {
-                    // TODO very ugly
-                    using var programInput = new MemoryStream();
-                    using var writer = new StreamWriter(programInput);
-                    await writer.WriteLineAsync(permutation[i].ToString());
-                    await writer.FlushAsync();
-                    output.Seek(0, SeekOrigin.Begin);
-                    await output.CopyToAsync(programInput);
-                    programInput.Seek(0, SeekOrigin.Begin);
+                    var inputChannel = Channel.CreateUnbounded<int>();
+                    await inputChannel.Writer.WriteAsync(permutation[i]);
+                    await inputChannel.Writer.WriteAsync(await outputChannel.Reader.ReadAsync());
 
-                    output = new MemoryStream();
+                    outputChannel = Channel.CreateUnbounded<int>();
 
-                    amplifiers[i].Run(programInput, output);
+                    await amplifiers[i].RunAsync(inputChannel, outputChannel);
                 }
 
-                var result = int.Parse(await output.AsAsyncEnumerable().LastAsync());
+                var result = await outputChannel.Reader.ReadAsync();
 
                 if (result > max)
                 {

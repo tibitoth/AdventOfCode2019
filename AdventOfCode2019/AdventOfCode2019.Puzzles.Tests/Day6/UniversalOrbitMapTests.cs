@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using AdventOfCode2019.Puzzles.Day6;
+using AdventOfCode2019.Puzzles.Extensions;
 using AdventOfCode2019.Puzzles.Tests.Extensions;
 using Xunit;
 
