@@ -55,7 +55,9 @@ namespace AdventOfCode2019.Puzzles.Day7
                     amplifiers[i] = (new IntcodeProgram(registers.ToArray()), inputChannel);
                 }
 
+                // initial input is 0
                 await amplifiers[0].Input.Writer.WriteAsync(0);
+
                 var tasks = new Task[amplifiers.Length];
 
                 for (int i = 0; i < amplifiers.Length; i++)
