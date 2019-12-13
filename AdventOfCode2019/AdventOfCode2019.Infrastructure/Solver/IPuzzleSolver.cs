@@ -6,7 +6,7 @@ namespace AdventOfCode2018.Infrastructure
 {
     public interface IPuzzleSolver
     {
-        bool IsInputFromHttp { get => true; }
+        bool IsInputFromHttp => true;
         Task<Stream> PrepareInputAsync(Stream input, int part) => Task.FromResult(input);
 
         Task<string> SolvePart1Async(Stream input);

@@ -6,7 +6,7 @@
     <UserSecretsId>95c0e3ff-b9ac-4087-89d7-e905eb74d775</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AdventOfCode2019.Day1\AdventOfCode2019.Puzzles.csproj" />
+    <ProjectReference Include="..\AdventOfCode2019.Puzzles\AdventOfCode2019.Puzzles.csproj" />
     <ProjectReference Include="..\AdventOfCode2019.Infrastructure\AdventOfCode2019.Infrastructure.csproj" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
