@@ -13,11 +13,11 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions
             FirstParam = GetParameterValue(1);
             SecondParam = GetParameterValue(2);
 
-            TargetAddress = context.Memory[context.InstructionPointer + 3];
+            TargetAddress = (int)context.Memory[context.InstructionPointer + 3];
         }
 
-        public int FirstParam { get; set; }
-        public int SecondParam { get; set; }
+        public long FirstParam { get; set; }
+        public long SecondParam { get; set; }
         public int TargetAddress { get; set; }
 
         public override async Task<int> ExecuteAsync()
@@ -27,6 +27,6 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions
             return await base.ExecuteAsync();
         }
 
-        protected abstract int ExecuteCore(int param1, int param2);
+        protected abstract long ExecuteCore(long param1, long param2);
     }
 }

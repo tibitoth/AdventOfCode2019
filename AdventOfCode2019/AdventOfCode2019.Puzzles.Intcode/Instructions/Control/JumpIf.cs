@@ -6,7 +6,7 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.Control
     {
         public override int InstructionLength => 3;
 
-        public int Param { get; }
+        public long Param { get; }
 
         public int AddressIf { get; set; }
 
@@ -14,7 +14,7 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.Control
             : base(context)
         {
             Param = GetParameterValue(1);
-            AddressIf = GetParameterValue(2);
+            AddressIf = (int)GetParameterValue(2);
         }
     }
 }

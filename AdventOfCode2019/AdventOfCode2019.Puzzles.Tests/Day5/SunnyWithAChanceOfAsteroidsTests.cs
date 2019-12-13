@@ -43,11 +43,11 @@ namespace AdventOfCode2019.Puzzles.Tests.Day5
             Assert.Equal("6959377", result);
         }
 
-        private async Task TestIntcodeProgramAsync(int[] memory, int input, int expectedOutput)
+        private async Task TestIntcodeProgramAsync(long[] memory, int input, int expectedOutput)
         {
             // Arrange
             var program = new IntcodeProgram(memory);
-            var output = Channel.CreateUnbounded<int>();
+            var output = Channel.CreateUnbounded<long>();
 
             // Act
             await program.RunAsync(await input.ToChannelAsync(), output);
@@ -62,7 +62,7 @@ namespace AdventOfCode2019.Puzzles.Tests.Day5
         [InlineData(9, 0)]
         public async Task EqualsPositionMode(int input, int expectedOutput)
         {
-            await TestIntcodeProgramAsync(new[] { 3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8 }, input, expectedOutput);
+            await TestIntcodeProgramAsync(new long[] { 3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8 }, input, expectedOutput);
         }
 
         [Theory]
@@ -70,7 +70,7 @@ namespace AdventOfCode2019.Puzzles.Tests.Day5
         [InlineData(9, 0)]
         public async Task EqualsImmediateMode(int input, int expectedOutput)
         {
-            await TestIntcodeProgramAsync(new[] { 3, 3, 1108, -1, 8, 3, 4, 3, 99 }, input, expectedOutput);
+            await TestIntcodeProgramAsync(new long[] { 3, 3, 1108, -1, 8, 3, 4, 3, 99 }, input, expectedOutput);
         }
 
         [Theory]
@@ -79,7 +79,7 @@ namespace AdventOfCode2019.Puzzles.Tests.Day5
         [InlineData(9, 0)]
         public async Task LessThanPossitionMode(int input, int expectedOutput)
         {
-            await TestIntcodeProgramAsync(new[] { 3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8 }, input, expectedOutput);
+            await TestIntcodeProgramAsync(new long[] { 3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8 }, input, expectedOutput);
         }
 
         [Theory]
@@ -88,7 +88,7 @@ namespace AdventOfCode2019.Puzzles.Tests.Day5
         [InlineData(9, 0)]
         public async Task LessThanImmediateMode(int input, int expectedOutput)
         {
-            await TestIntcodeProgramAsync(new[] { 3, 3, 1107, -1, 8, 3, 4, 3, 99 }, input, expectedOutput);
+            await TestIntcodeProgramAsync(new long[] { 3, 3, 1107, -1, 8, 3, 4, 3, 99 }, input, expectedOutput);
         }
 
         [Theory]
@@ -97,7 +97,7 @@ namespace AdventOfCode2019.Puzzles.Tests.Day5
         [InlineData(9, 1)]
         public async Task JumpPositionMode(int input, int expectedOutput)
         {
-            await TestIntcodeProgramAsync(new[] { 3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9 }, input, expectedOutput);
+            await TestIntcodeProgramAsync(new long[] { 3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9 }, input, expectedOutput);
         }
 
         [Theory]
@@ -106,7 +106,7 @@ namespace AdventOfCode2019.Puzzles.Tests.Day5
         [InlineData(9, 1)]
         public async Task JumpImmediateMode(int input, int expectedOutput)
         {
-            await TestIntcodeProgramAsync(new[] { 3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1 }, input, expectedOutput);
+            await TestIntcodeProgramAsync(new long[] { 3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1 }, input, expectedOutput);
         }
 
         [Theory]
@@ -115,7 +115,7 @@ namespace AdventOfCode2019.Puzzles.Tests.Day5
         [InlineData(9, 1001)]
         public async Task LargerExample(int input, int expectedOutput)
         {
-            await TestIntcodeProgramAsync(new[] { 3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
+            await TestIntcodeProgramAsync(new long[] { 3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
                 1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
                 999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99 }, input, expectedOutput);
         }

@@ -4,7 +4,7 @@
     {
         public override int InstructionLength => 2;
 
-        public int Param { get; set; }
+        public long Param { get; set; }
 
         protected OneParamInstruction(ProgramContext context) : base(context)
         {

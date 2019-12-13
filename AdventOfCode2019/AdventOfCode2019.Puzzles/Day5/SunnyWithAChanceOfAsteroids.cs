@@ -19,10 +19,10 @@ namespace AdventOfCode2019.Puzzles.Day5
         public async Task<string> SolvePart1Async(Stream input)
         {
             var line = await input.ReadLineAsync();
-            int[] registers = line.Split(',').Select(x => int.Parse(x)).ToArray();
+            var registers = line.Split(',').Select(x => long.Parse(x)).ToArray();
 
             var program = new IntcodeProgram(registers);
-            var outputChannel = Channel.CreateUnbounded<int>();
+            var outputChannel = Channel.CreateUnbounded<long>();
             await program.RunAsync(await 1.ToChannelAsync(), outputChannel);
             return (await outputChannel.Reader.ReadAllAsync().LastAsync()).ToString();
         }
@@ -30,10 +30,10 @@ namespace AdventOfCode2019.Puzzles.Day5
         public async Task<string> SolvePart2Async(Stream input)
         {
             var line = await input.ReadLineAsync();
-            int[] registers = line.Split(',').Select(x => int.Parse(x)).ToArray();
+            var registers = line.Split(',').Select(x => long.Parse(x)).ToArray();
 
             var program = new IntcodeProgram(registers);
-            var outputChannel = Channel.CreateUnbounded<int>();
+            var outputChannel = Channel.CreateUnbounded<long>();
             await program.RunAsync(await 5.ToChannelAsync(), outputChannel);
             return (await outputChannel.Reader.ReadAllAsync().LastAsync()).ToString();
         }

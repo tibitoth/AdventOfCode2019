@@ -7,9 +7,9 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.IO
 {
     public class Input : OneParamInstruction
     {
-        private readonly ChannelReader<int> _reader;
+        private readonly ChannelReader<long> _reader;
 
-        public Input(ProgramContext context, ChannelReader<int> reader)
+        public Input(ProgramContext context, ChannelReader<long> reader)
             : base(context)
         {
             Param = ProgramContext.Memory[ProgramContext.InstructionPointer + 1];
@@ -18,7 +18,7 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.IO
 
         public override async Task<int> ExecuteAsync()
         {
-            ProgramContext.Memory[Param] = await _reader.ReadAsync();
+            ProgramContext.Memory[(int)Param] = await _reader.ReadAsync();
 
             return await base.ExecuteAsync();
         }

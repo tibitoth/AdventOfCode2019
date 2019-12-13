@@ -9,7 +9,7 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.Boolean
         {
         }
 
-        protected override int ExecuteCore(int param1, int param2)
+        protected override long ExecuteCore(long param1, long param2)
         {
             return param1 == param2 ? 1 : 0;
         }

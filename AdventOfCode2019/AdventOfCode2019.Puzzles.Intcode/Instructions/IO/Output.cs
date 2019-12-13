@@ -7,9 +7,9 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.IO
 {
     public class Output : OneParamInstruction
     {
-        private readonly ChannelWriter<int> _writer;
+        private readonly ChannelWriter<long> _writer;
 
-        public Output(ProgramContext context, ChannelWriter<int> writer)
+        public Output(ProgramContext context, ChannelWriter<long> writer)
             : base(context)
         {
             Param = GetParameterValue(1);

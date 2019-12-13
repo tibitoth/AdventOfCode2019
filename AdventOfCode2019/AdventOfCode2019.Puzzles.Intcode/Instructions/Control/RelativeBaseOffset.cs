@@ -12,7 +12,7 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.Control
         public RelativeBaseOffset(ProgramContext context)
             : base(context)
         {
-            Param = GetParameterValue(1);
+            Param = (int)GetParameterValue(1);
         }
 
         public override int InstructionLength => 2;

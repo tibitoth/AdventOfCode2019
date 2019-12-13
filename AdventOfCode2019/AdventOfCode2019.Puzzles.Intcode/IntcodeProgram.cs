@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using AdventOfCode2019.Puzzles.Intcode.Instructions;
@@ -13,17 +14,17 @@ namespace AdventOfCode2019.Puzzles.Intcode
 {
     public class IntcodeProgram
     {
-        private ChannelReader<int> _inputReader;
-        private ChannelWriter<int> _outputWriter;
+        private ChannelReader<long> _inputReader;
+        private ChannelWriter<long> _outputWriter;
 
         private readonly ProgramContext _programContext;
 
-        public IntcodeProgram(int[] registers)
+        public IntcodeProgram(long[] registers)
         {
-            _programContext = new ProgramContext() { Memory = registers };
+            _programContext = new ProgramContext() { Memory = registers.ToList() };
         }
 
-        public async Task RunAsync(Channel<int> input, Channel<int> output)
+        public async Task RunAsync(Channel<long> input, Channel<long> output)
         {
             _inputReader = input.Reader;
             _outputWriter = output.Writer;
@@ -34,11 +35,11 @@ namespace AdventOfCode2019.Puzzles.Intcode
             }
         }
 
-        public int this[int index] => _programContext.Memory[index];
+        public long this[int index] => _programContext.Memory[index];
 
         private IEnumerable<InstructionBase> Load()
         {
-            while (_programContext.InstructionPointer < _programContext.Memory.Length)
+            while (_programContext.InstructionPointer < _programContext.Memory.Count)
             {
                 var instruction = CreateInstruction(_programContext.InstructionPointer);
                 if (instruction is Halt)

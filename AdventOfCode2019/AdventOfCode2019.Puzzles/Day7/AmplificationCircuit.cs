@@ -27,12 +27,12 @@ namespace AdventOfCode2019.Puzzles.Day7
             return (await GetMaxThrusterSignalAsync(input, PhaseSettingsType.FeedbackLoop)).MaxSignal.ToString();
         }
 
-        internal async Task<(int MaxSignal, int[] MaxPermutation)> GetMaxThrusterSignalAsync(Stream input, PhaseSettingsType phaseSettingsType)
+        internal async Task<(long MaxSignal, int[] MaxPermutation)> GetMaxThrusterSignalAsync(Stream input, PhaseSettingsType phaseSettingsType)
         {
             var line = await input.ReadLineAsync();
-            int[] registers = line.Split(',').Select(x => int.Parse(x)).ToArray();
+            var registers = line.Split(',').Select(x => long.Parse(x)).ToArray();
 
-            var max = int.MinValue;
+            long max = long.MinValue;
             int[] maxPermutation = null;
             var phaseSettingsRange = phaseSettingsType switch
             {
@@ -44,10 +44,10 @@ namespace AdventOfCode2019.Puzzles.Day7
             foreach (var p in phaseSettingsRange.GetPermutations())
             {
                 var permutation = p.ToArray();
-                var amplifiers = new (IntcodeProgram Program, Channel<int> Input)[5];
+                var amplifiers = new (IntcodeProgram Program, Channel<long> Input)[5];
                 for (int i = 0; i < amplifiers.Length; i++)
                 {
-                    var inputChannel = Channel.CreateUnbounded<int>();
+                    var inputChannel = Channel.CreateUnbounded<long>();
                     await inputChannel.Writer.WriteAsync(permutation[i]);
 
                     // copy registers

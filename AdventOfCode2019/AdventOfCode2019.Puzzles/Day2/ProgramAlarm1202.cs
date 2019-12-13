@@ -38,10 +38,10 @@ namespace AdventOfCode2019.Puzzles.Day2
         public async Task<string> SolvePart1Async(Stream input)
         {
             var line = await input.ReadLineAsync();
-            int[] registers = line.Split(',').Select(x => int.Parse(x)).ToArray();
+            long[] registers = line.Split(',').Select(x => long.Parse(x)).ToArray();
 
             var program = new IntcodeProgram(registers);
-            await program.RunAsync(Channel.CreateUnbounded<int>(), Channel.CreateUnbounded<int>());
+            await program.RunAsync(Channel.CreateUnbounded<long>(), Channel.CreateUnbounded<long>());
 
             return program[0].ToString();
         }
@@ -49,7 +49,7 @@ namespace AdventOfCode2019.Puzzles.Day2
         public async Task<string> SolvePart2Async(Stream input)
         {
             var line = await input.ReadLineAsync();
-            int[] registers = line.Split(',').Select(x => int.Parse(x)).ToArray();
+            long[] registers = line.Split(',').Select(x => long.Parse(x)).ToArray();
 
             for (int noun = 0; noun < 100; noun++)
             {
@@ -58,7 +58,7 @@ namespace AdventOfCode2019.Puzzles.Day2
                     registers[1] = noun;
                     registers[2] = verb;
                     var program = new IntcodeProgram(registers.ToArray()); // array copy
-                    await program.RunAsync(Channel.CreateUnbounded<int>(), Channel.CreateUnbounded<int>());
+                    await program.RunAsync(Channel.CreateUnbounded<long>(), Channel.CreateUnbounded<long>());
 
                     if (program[0] == 19690720)
                     {
