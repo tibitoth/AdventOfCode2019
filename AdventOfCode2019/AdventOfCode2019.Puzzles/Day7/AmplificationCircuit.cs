@@ -25,7 +25,6 @@ namespace AdventOfCode2019.Puzzles.Day7
         public async Task<string> SolvePart2Async(Stream input)
         {
             return (await GetMaxThrusterSignalAsync(input, PhaseSettingsType.FeedbackLoop)).MaxSignal.ToString();
-
         }
 
         internal async Task<(int MaxSignal, int[] MaxPermutation)> GetMaxThrusterSignalAsync(Stream input, PhaseSettingsType phaseSettingsType)
