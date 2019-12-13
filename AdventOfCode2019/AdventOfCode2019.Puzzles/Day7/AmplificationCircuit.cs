@@ -39,6 +39,7 @@ namespace AdventOfCode2019.Puzzles.Day7
             {
                 PhaseSettingsType.OneShot => Enumerable.Range(0, 5),
                 PhaseSettingsType.FeedbackLoop => Enumerable.Range(5, 5),
+                _ => throw new ArgumentOutOfRangeException(nameof(phaseSettingsType), phaseSettingsType, $"Invalid {nameof(PhaseSettingsType)}")
             };
 
             foreach (var p in phaseSettingsRange.GetPermutations())
