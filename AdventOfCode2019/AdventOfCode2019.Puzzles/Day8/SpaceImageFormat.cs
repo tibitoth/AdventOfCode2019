@@ -64,11 +64,9 @@ namespace AdventOfCode2019.Puzzles.Day8
                     {
                         continue;
                     }
-                    else
-                    {
-                        image[i] = layer[i] == '0' ? ' ' : 'X';
-                        break;
-                    }
+
+                    image[i] = layer[i] == '0' ? ' ' : 'X';
+                    break;
                 }
             }
 
@@ -81,6 +79,7 @@ namespace AdventOfCode2019.Puzzles.Day8
 
             _logger.LogInformation(s);
 
+            // todo ocr
             return null;
         }
 
