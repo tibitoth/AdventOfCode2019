@@ -25,14 +25,19 @@ namespace AdventOfCode2019.Puzzles.Day9
             var outputChannel = Channel.CreateUnbounded<long>();
             await program.RunAsync(await 1.ToChannelAsync(), outputChannel);
 
-            var x = await outputChannel.Reader.ReadAllAsync().ToListAsync();
-
-            return (x.First()).ToString();
+            return (await outputChannel.Reader.ReadAllAsync().FirstAsync()).ToString();
         }
 
-        public Task<string> SolvePart2Async(Stream input)
+        public async Task<string> SolvePart2Async(Stream input)
         {
-            throw new NotImplementedException();
+            var line = await input.ReadLineAsync();
+            var registers = line.Split(',').Select(x => long.Parse(x)).ToArray();
+
+            var program = new IntcodeProgram(registers);
+            var outputChannel = Channel.CreateUnbounded<long>();
+            await program.RunAsync(await 2.ToChannelAsync(), outputChannel);
+
+            return (await outputChannel.Reader.ReadAllAsync().FirstAsync()).ToString();
         }
     }
 }
