@@ -21,20 +21,25 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions
 
         protected long GetParameterValue(int parameterPosition)
         {
+            return ProgramContext[GetParameterIndex(parameterPosition)];
+        }
+
+        protected int GetParameterIndex(int parameterPosition)
+        {
             int digit = (int)Math.Pow(10, parameterPosition) * 100;
-            var instructionCode = ProgramContext.Memory[ProgramContext.InstructionPointer];
+            var instructionCode = ProgramContext[ProgramContext.InstructionPointer];
 
             if ((instructionCode % digit * 10 / digit) == 0) // absolute position mode
             {
-                return ProgramContext.Memory[0 + (int)ProgramContext.Memory[ProgramContext.InstructionPointer + parameterPosition]];
+                return 0 + (int) ProgramContext[ProgramContext.InstructionPointer + parameterPosition];
             }
             else if ((instructionCode % digit * 10 / digit) == 1) // immediate mode (value)
             {
-                return ProgramContext.Memory[ProgramContext.InstructionPointer + parameterPosition];
+                return ProgramContext.InstructionPointer + parameterPosition;
             }
             else if ((instructionCode % digit * 10 / digit) == 2) // relative position mode 
             {
-                return ProgramContext.Memory[ProgramContext.RelativeBase + (int)ProgramContext.Memory[ProgramContext.InstructionPointer + parameterPosition]];
+                return ProgramContext.RelativeBase + (int)ProgramContext[ProgramContext.InstructionPointer + parameterPosition];
             }
             else
             {

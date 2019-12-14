@@ -12,13 +12,13 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.IO
         public Input(ProgramContext context, ChannelReader<long> reader)
             : base(context)
         {
-            Param = ProgramContext.Memory[ProgramContext.InstructionPointer + 1];
+            Param = GetParameterIndex(1);
             _reader = reader;
         }
 
         public override async Task<int> ExecuteAsync()
         {
-            ProgramContext.Memory[(int)Param] = await _reader.ReadAsync();
+            ProgramContext[(int)Param] = await _reader.ReadAsync();
 
             return await base.ExecuteAsync();
         }

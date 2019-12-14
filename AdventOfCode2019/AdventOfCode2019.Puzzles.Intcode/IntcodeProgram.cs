@@ -21,7 +21,7 @@ namespace AdventOfCode2019.Puzzles.Intcode
 
         public IntcodeProgram(long[] registers)
         {
-            _programContext = new ProgramContext() { Memory = registers.ToList() };
+            _programContext = new ProgramContext(registers);
         }
 
         public async Task RunAsync(Channel<long> input, Channel<long> output)
@@ -35,13 +35,14 @@ namespace AdventOfCode2019.Puzzles.Intcode
             }
         }
 
-        public long this[int index] => _programContext.Memory[index];
+        public long this[int index] => _programContext[index];
 
         private IEnumerable<InstructionBase> Load()
         {
-            while (_programContext.InstructionPointer < _programContext.Memory.Count)
+            while (_programContext.InstructionPointer < _programContext.MemorySize)
             {
                 var instruction = CreateInstruction(_programContext.InstructionPointer);
+
                 if (instruction is Halt)
                 {
                     _outputWriter.Complete();
@@ -56,7 +57,7 @@ namespace AdventOfCode2019.Puzzles.Intcode
 
         private InstructionBase CreateInstruction(int address)
         {
-            return (_programContext.Memory[address] % 100) switch
+            return (_programContext[address] % 100) switch
             {
                 99 => new Halt(_programContext),
                 1 => new Add(_programContext),
