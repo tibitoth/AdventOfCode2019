@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AdventOfCode2018.Infrastructure;
 using AdventOfCode2019.Infrastructure;
 using AdventOfCode2019.Puzzles.Extensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace AdventOfCode2019.Puzzles.Day8
@@ -14,10 +15,12 @@ namespace AdventOfCode2019.Puzzles.Day8
     [Day(8)]
     public class SpaceImageFormat : IPuzzleSolver
     {
+        private readonly ILogger<SpaceImageFormat> _logger;
         private readonly SpaceImageFormatParameters _param;
 
-        public SpaceImageFormat(IOptions<SpaceImageFormatParameters> optionsAccessor)
+        public SpaceImageFormat(IOptions<SpaceImageFormatParameters> optionsAccessor, ILogger<SpaceImageFormat> logger)
         {
+            _logger = logger;
             _param = optionsAccessor.Value;
         }
 
@@ -42,9 +45,43 @@ namespace AdventOfCode2019.Puzzles.Day8
             return (layer.Count(c => c == '1') * layer.Count(c => c == '2')).ToString();
         }
 
-        public Task<string> SolvePart2Async(Stream input)
+        public async Task<string> SolvePart2Async(Stream input)
         {
-            throw new NotImplementedException();
+            var line = await input.ReadLineAsync();
+
+            var layers = line.AsEnumerable()
+                .Batch(_param.Width * _param.Height)
+                .Select(l => l.ToArray())
+                .ToArray();
+
+            var image = new char[_param.Width * _param.Height];
+
+            for (int i = 0; i < _param.Width * _param.Height; i++)
+            {
+                foreach (var layer in layers)
+                {
+                    if (layer[i] == '2')
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        image[i] = layer[i] == '0' ? ' ' : 'X';
+                        break;
+                    }
+                }
+            }
+
+            string s = "";
+
+            for (int i = 0; i < _param.Width * _param.Height; i += _param.Width)
+            {
+                s += new string(image.AsSpan(i, _param.Width)) + Environment.NewLine;
+            }
+
+            _logger.LogInformation(s);
+
+            return null;
         }
 
     }
