@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using AdventOfCode2018.Infrastructure;
 using AdventOfCode2019.Puzzles.Day8;
 using AdventOfCode2019.Puzzles.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
@@ -19,7 +22,7 @@ namespace AdventOfCode2019.Puzzles.Tests.Day8
         {
             // Arrange
             var input = "123456789012";
-            var subject = new SpaceImageFormat(Options.Create(new SpaceImageFormatParameters { Height = 2, Width = 3 }));
+            var subject = new SpaceImageFormat(Options.Create(new SpaceImageFormatParameters { Height = 2, Width = 3 }), new NullLogger<SpaceImageFormat>());
 
             // Act
             var result = await subject.SolvePart1Async(input.ToMemoryStream());
@@ -33,7 +36,7 @@ namespace AdventOfCode2019.Puzzles.Tests.Day8
         {
             // Arrange
             var input = "121456789012";
-            var subject = new SpaceImageFormat(Options.Create(new SpaceImageFormatParameters { Height = 2, Width = 3 }));
+            var subject = new SpaceImageFormat(Options.Create(new SpaceImageFormatParameters { Height = 2, Width = 3 }), new NullLogger<SpaceImageFormat>());
 
             // Act
             var result = await subject.SolvePart1Async(input.ToMemoryStream());
@@ -47,7 +50,7 @@ namespace AdventOfCode2019.Puzzles.Tests.Day8
         {
             // Arrange
             using var input = File.OpenRead("Day8/input.txt");
-            var subject = new SpaceImageFormat(Options.Create(new SpaceImageFormatParameters { Height = 25, Width = 6 }));
+            var subject = new SpaceImageFormat(Options.Create(new SpaceImageFormatParameters { Height = 25, Width = 6 }), new NullLogger<SpaceImageFormat>());
 
             // Act
             var result = await subject.SolvePart1Async(input);
