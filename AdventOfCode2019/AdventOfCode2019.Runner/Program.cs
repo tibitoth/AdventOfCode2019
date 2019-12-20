@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
 using AdventOfCode2019.Puzzles.Day10;
+using AdventOfCode2019.Puzzles.Day11;
 using AdventOfCode2019.Puzzles.Day6;
 using AdventOfCode2019.Puzzles.Day7;
 using AdventOfCode2019.Puzzles.Day8;
@@ -49,6 +50,7 @@ namespace AdventOfCode2018.Day1
                     services.Configure<SpaceImageFormatParameters>(ctx.Configuration.GetSection(nameof(SpaceImageFormatParameters)));
                     services.AddTransient<SensorBoost>();
                     services.AddTransient<MonitoringStation>();
+                    services.AddTransient<SpacePolice>();
 
                     services.AddHttpClient<PuzzleClient>()
                         .ConfigureHttpClient(c => c.BaseAddress = new Uri(option.BaseUrl))

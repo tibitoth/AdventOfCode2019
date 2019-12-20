@@ -12,7 +12,7 @@ using AdventOfCode2019.Puzzles.Intcode.Instructions.IO;
 
 namespace AdventOfCode2019.Puzzles.Intcode
 {
-    public class IntcodeProgram
+    public class IntcodeProgram : IIntcodeProgram
     {
         private ChannelReader<long> _inputReader;
         private ChannelWriter<long> _outputWriter;
