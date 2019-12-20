@@ -68,7 +68,7 @@ namespace AdventOfCode2019.Puzzles.Tests.Day11
             var subject = new SpacePolice();
 
             // Act
-            var result = await subject.GetPaintedPanelsAsync(program.Object);
+            var result = (await subject.GetPaintedPanelsAsync(program.Object, PaintedColor.Black)).Count;
 
             // Assert
             Assert.Equal(6, result);

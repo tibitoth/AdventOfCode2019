@@ -9,12 +9,20 @@ using AdventOfCode2018.Infrastructure;
 using AdventOfCode2019.Infrastructure;
 using AdventOfCode2019.Puzzles.Extensions;
 using AdventOfCode2019.Puzzles.Intcode;
+using Microsoft.Extensions.Logging;
 
 namespace AdventOfCode2019.Puzzles.Day11
 {
     [Day(11)]
     public class SpacePolice : IPuzzleSolver
     {
+        private readonly ILogger<SpacePolice> _logger;
+
+        public SpacePolice(ILogger<SpacePolice> logger)
+        {
+            _logger = logger;
+        }
+
         public async Task<string> SolvePart1Async(Stream input)
         {
             var line = await input.ReadLineAsync();
@@ -22,10 +30,39 @@ namespace AdventOfCode2019.Puzzles.Day11
 
             var program = new IntcodeProgram(registers);
 
-            return (await GetPaintedPanelsAsync(program)).ToString();
+            return (await GetPaintedPanelsAsync(program, PaintedColor.Black)).Count.ToString();
         }
 
-        internal async Task<int> GetPaintedPanelsAsync(IIntcodeProgram program)
+        public async Task<string> SolvePart2Async(Stream input)
+        {
+            var line = await input.ReadLineAsync();
+            var registers = line.Split(',').Select(x => long.Parse(x)).ToArray();
+
+            var program = new IntcodeProgram(registers);
+
+            var panels = await GetPaintedPanelsAsync(program, PaintedColor.White);
+
+            var s = new StringBuilder();
+
+            for (int j = panels.Keys.Max(c => c.y) ; j > panels.Keys.Min(c => c.y) - 1; j--)
+            {
+                for (int i = panels.Keys.Min(c => c.x); i < panels.Keys.Max(c => c.x) + 1; i++)
+                {
+                    s.Append(panels.ContainsKey((i, j))
+                        ? panels[(i, j)] == PaintedColor.White ? "#" : " "
+                        : " ");
+                }
+
+                s.Append(Environment.NewLine);
+            }
+
+            _logger.LogInformation(s.ToString());
+
+            // todo ocr
+            return null; // URCAFLCP
+        }
+
+        internal async Task<Dictionary<(int x, int y), PaintedColor>> GetPaintedPanelsAsync(IIntcodeProgram program, PaintedColor startColor)
         {
             var inputChannel = Channel.CreateUnbounded<long>();
             var outputChannel = Channel.CreateUnbounded<long>();
@@ -37,7 +74,7 @@ namespace AdventOfCode2019.Puzzles.Day11
             var y = 0;
             var dir = Direction.Up;
 
-            await inputChannel.Writer.WriteAsync((long)PaintedColor.Black);
+            await inputChannel.Writer.WriteAsync((long)startColor);
 
             do
             {
@@ -73,12 +110,7 @@ namespace AdventOfCode2019.Puzzles.Day11
             }
             while (!programTask.IsCompleted && await outputChannel.Reader.WaitToReadAsync());
 
-            return paintedPanels.Count;
-        }
-
-        public Task<string> SolvePart2Async(Stream input)
-        {
-            throw new NotImplementedException();
+            return paintedPanels;
         }
     }
 }
