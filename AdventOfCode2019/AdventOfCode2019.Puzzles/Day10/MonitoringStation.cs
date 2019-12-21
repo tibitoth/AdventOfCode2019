@@ -11,12 +11,30 @@ using AdventOfCode2019.Puzzles.Extensions;
 
 namespace AdventOfCode2019.Puzzles.Day10
 {
+    public class Asteroid
+    {
+        public Vector2 Coord { get; set; }
+        public HashSet<Vector2> Hidden { get; set; } = new HashSet<Vector2>();
+
+        public Asteroid(int x, int y)
+        {
+            Coord = new Vector2(x, y);
+        }
+    }
+
     [Day(10)]
     public class MonitoringStation : IPuzzleSolver
     {
         public async Task<string> SolvePart1Async(Stream input)
         {
-            var asteroids = new List<(Vector2 Coord, HashSet<Vector2> Hidden)>();
+            var asteroids = await GetAsteroidsAsync(input);
+
+            return (asteroids.Count - 1 - GetLaser(asteroids).Hidden.Count).ToString();
+        }
+
+        private async Task<List<Asteroid>> GetAsteroidsAsync(Stream input)
+        {
+            var asteroids = new List<Asteroid>();
 
             int y = 0;
             await foreach (var line in input.AsAsyncEnumerable())
@@ -26,7 +44,7 @@ namespace AdventOfCode2019.Puzzles.Day10
                 {
                     if (field == '#')
                     {
-                        asteroids.Add((new Vector2(x, y), new HashSet<Vector2>()));
+                        asteroids.Add(new Asteroid(x, y));
                     }
 
                     x++;
@@ -35,36 +53,89 @@ namespace AdventOfCode2019.Puzzles.Day10
                 y++;
             }
 
+            return asteroids;
+        }
+
+        private Asteroid GetLaser(List<Asteroid> asteroids)
+        {
             foreach (var from in asteroids)
             {
-                foreach (var a1 in asteroids)
+                FillHiddenAsteroids(asteroids, from);
+            }
+
+            var min = asteroids.Min(x => x.Hidden.Count);
+            return asteroids.Single(a => a.Hidden.Count == min);
+        }
+
+        public async Task<string> SolvePart2Async(Stream input)
+        {
+            var asteroids = await GetAsteroidsAsync(input);
+            var laser = GetLaser(asteroids);
+            var a200 = Get200thAsteroid(asteroids, laser);
+
+            return (a200.X * 100 + a200.Y).ToString();
+        }
+
+        private Vector2 Get200thAsteroid(List<Asteroid> asteroids, Asteroid laser)
+        {
+            int i = 1;
+
+            while (true)
+            {
+                FillHiddenAsteroids(asteroids, laser);
+
+                var currentIteration = asteroids.Where(x => x.Coord != laser.Coord && !laser.Hidden.Contains(x.Coord)).ToList();
+                while (currentIteration.Any())
                 {
-                    foreach (var a2 in asteroids)
+                    Asteroid min = null;
+                    double minAngle = double.MaxValue;
+
+                    foreach (var a in currentIteration)
                     {
-                        if (from.Coord == a1.Coord || from.Coord == a2.Coord || a1.Coord == a2.Coord)
+                        var angle = Math.Acos(Vector2.Dot(a.Coord, laser.Coord) / (a.Coord.Length() * laser.Coord.Length()));
+                        if (angle < minAngle)
                         {
-                            continue;
+                            minAngle = angle;
+                            min = a;
                         }
+                    }
 
-                        if (Math.Abs(Vector2.Distance(@from.Coord, a1.Coord) + Vector2.Distance(a1.Coord, a2.Coord) - Vector2.Distance(@from.Coord, a2.Coord)) < 0.00001)
-                        {
-                            from.Hidden.Add(a2.Coord);
-                        }
+                    asteroids.Remove(min);
+                    currentIteration.Remove(min);
+                    if (i == 200)
+                    {
+                        return min.Coord;
+                    }
 
-                        if (Math.Abs(Vector2.Distance(@from.Coord, a2.Coord) + Vector2.Distance(a2.Coord, a1.Coord) - Vector2.Distance(@from.Coord, a1.Coord)) < 0.00001)
-                        {
-                            from.Hidden.Add(a1.Coord);
-                        }
+                    i++;
+                }
+            }
+        }
+
+        private void FillHiddenAsteroids(List<Asteroid> asteroids, Asteroid from)
+        {
+            from.Hidden.Clear();
+
+            foreach (var a1 in asteroids)
+            {
+                foreach (var a2 in asteroids)
+                {
+                    if (from.Coord == a1.Coord || from.Coord == a2.Coord || a1.Coord == a2.Coord)
+                    {
+                        continue;
+                    }
+
+                    if (Math.Abs(Vector2.Distance(@from.Coord, a1.Coord) + Vector2.Distance(a1.Coord, a2.Coord) - Vector2.Distance(@from.Coord, a2.Coord)) < 0.00001)
+                    {
+                        from.Hidden.Add(a2.Coord);
+                    }
+
+                    if (Math.Abs(Vector2.Distance(@from.Coord, a2.Coord) + Vector2.Distance(a2.Coord, a1.Coord) - Vector2.Distance(@from.Coord, a1.Coord)) < 0.00001)
+                    {
+                        from.Hidden.Add(a1.Coord);
                     }
                 }
             }
-
-            return (asteroids.Count - 1 - asteroids.Min(x => x.Hidden.Count)).ToString();
-        }
-
-        public Task<string> SolvePart2Async(Stream input)
-        {
-            throw new NotImplementedException();
         }
     }
 }

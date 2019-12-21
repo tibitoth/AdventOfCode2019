@@ -182,5 +182,39 @@ namespace AdventOfCode2019.Puzzles.Tests.Day10
             // Assert
             Assert.Equal(334.ToString(), result);
         }
+
+        [Fact]
+        public async Task Part2_DetailedExample()
+        {
+            // Arrange
+            var subject = new MonitoringStation();
+            var input = 
+                @".#..##.###...#######
+##.############..##.
+.#.######.########.#
+.###.#######.####.#.
+#####.##.#.##.###.##
+..#####..#.#########
+####################
+#.####....###.#.#.##
+##.#################
+#####.##.###..####..
+..######..##.#######
+####.##.####...##..#
+.#####..#.######.###
+##...#.##########...
+#.##########.#######
+.####.#.###.###.#.##
+....##.##.###..#####
+.#.#.###########.###
+#.#.#.#####.####.###
+###.##.####.##.#..##";
+
+            // Act
+            var result = await subject.SolvePart2Async(input.ToMemoryStream());
+
+            // Assert
+            Assert.Equal(802.ToString(), result);
+        }
     }
 }
