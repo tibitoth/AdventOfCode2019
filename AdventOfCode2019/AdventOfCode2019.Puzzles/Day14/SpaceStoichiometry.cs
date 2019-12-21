@@ -13,11 +13,11 @@ namespace AdventOfCode2019.Puzzles.Day14
     [Day(14)]
     public class SpaceStoichiometry : IPuzzleSolver
     {
-        public async Task<string> SolvePart1Async(Stream input)
-        {
-            var chemicalReactions = new Dictionary<string, ChemicalReaction>();
-            var inventory = new Dictionary<string, int>();
+        private readonly Dictionary<string, ChemicalReaction> _chemicalReactions = new Dictionary<string, ChemicalReaction>();
+        private readonly Dictionary<string, int> _inventory = new Dictionary<string, int>();
 
+        private async Task ParseInputAsync(Stream input)
+        {
             await foreach (var line in input.AsAsyncEnumerable())
             {
                 // example: 7 A, 1 D => 1 E
@@ -39,40 +39,46 @@ namespace AdventOfCode2019.Puzzles.Day14
                     });
                 }
 
-                chemicalReactions[name] = c;
-                inventory[name] = 0;
+                _chemicalReactions[name] = c;
+                _inventory[name] = 0;
             }
+        }
 
-            int CreateChemical(string name, int amount)
-            {
-                if (name == "ORE")
-                {
-                    return amount;
-                }
-
-                if (inventory[name] >= amount)
-                {
-                    inventory[name] -= amount;
-                    return 0;
-                }
-                else
-                {
-                    var required = amount - inventory[name];
-                    var reactionAmount = required / chemicalReactions[name].Amount + (required % chemicalReactions[name].Amount != 0 ? 1 : 0);
-
-                    inventory[name] += reactionAmount * chemicalReactions[name].Amount;
-                    inventory[name] -= amount;
-
-                    return chemicalReactions[name].Ingredients.Sum(i => CreateChemical(i.Chemical, reactionAmount * i.Amount));
-                } 
-            }
+        public async Task<string> SolvePart1Async(Stream input)
+        {
+            await ParseInputAsync(input);
 
             return CreateChemical("FUEL", 1).ToString();
         }
 
-        public Task<string> SolvePart2Async(Stream input)
+        private int CreateChemical(string name, int amount)
         {
-            throw new NotImplementedException();
+            if (name == "ORE")
+            {
+                return amount;
+            }
+
+            if (_inventory[name] >= amount)
+            {
+                _inventory[name] -= amount;
+                return 0;
+            }
+            else
+            {
+                var required = amount - _inventory[name];
+                var reactionAmount = required / _chemicalReactions[name].Amount + (required % _chemicalReactions[name].Amount != 0 ? 1 : 0);
+
+                _inventory[name] += reactionAmount * _chemicalReactions[name].Amount;
+                _inventory[name] -= amount;
+
+                return _chemicalReactions[name].Ingredients.Sum(i => CreateChemical(i.Chemical, reactionAmount * i.Amount));
+            }
+        }
+
+        public async Task<string> SolvePart2Async(Stream input)
+        {
+            await ParseInputAsync(input);
+            return (1000000000000 / CreateChemical("FUEL", 1)).ToString();
         }
     }
 }
