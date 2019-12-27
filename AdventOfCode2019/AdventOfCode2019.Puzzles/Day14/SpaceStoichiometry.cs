@@ -14,7 +14,7 @@ namespace AdventOfCode2019.Puzzles.Day14
     public class SpaceStoichiometry : IPuzzleSolver
     {
         private readonly Dictionary<string, ChemicalReaction> _chemicalReactions = new Dictionary<string, ChemicalReaction>();
-        private readonly Dictionary<string, int> _inventory = new Dictionary<string, int>();
+        private readonly Dictionary<string, long> _inventory = new Dictionary<string, long>();
 
         private async Task ParseInputAsync(Stream input)
         {
@@ -51,7 +51,7 @@ namespace AdventOfCode2019.Puzzles.Day14
             return CreateChemical("FUEL", 1).ToString();
         }
 
-        private int CreateChemical(string name, int amount)
+        private long CreateChemical(string name, long amount)
         {
             if (name == "ORE")
             {
@@ -78,7 +78,37 @@ namespace AdventOfCode2019.Puzzles.Day14
         public async Task<string> SolvePart2Async(Stream input)
         {
             await ParseInputAsync(input);
-            return (1000000000000 / CreateChemical("FUEL", 1)).ToString();
+
+            long target = 1_000_000_000_000;
+            long min = 0;
+            long max = target;
+            long i = target / 2;
+            while (Math.Abs(min - max) > 1)
+            {
+                var ore = CreateChemical("FUEL", i);
+
+                if (ore > target)
+                {
+                    max = i;
+                    i = (min + i) / 2;
+                }
+
+                if (ore < target)
+                {
+                    min = i;
+                    i = (max + i) / 2;
+                }
+
+                if (ore == target)
+                {
+                    break;
+                }
+            }
+
+            return min.ToString();
         }
+
+        // 1122037 is too high
+        // 1122037
     }
 }
