@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using AdventOfCode2018.Infrastructure;
@@ -12,16 +11,30 @@ using static System.Math;
 
 namespace AdventOfCode2019.Puzzles.Day12
 {
+    internal class Vector3Int
+    {
+        public Vector3Int(int x, int y, int z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+        }
+
+        public int X;
+        public int Y;
+        public int Z;
+    }
+
+    internal class Moon
+    {
+        public Vector3Int Position;
+        public Vector3Int Velocity;
+    }
+
     [Day(12)]
     public class TheNBodyProblem : IPuzzleSolver
     {
         private List<Moon> _moons;
-
-        internal class Moon
-        {
-            public Vector3 Position;
-            public Vector3 Velocity;
-        }
 
         internal async Task ParseInputAsync(Stream input)
         {
@@ -32,11 +45,11 @@ namespace AdventOfCode2019.Puzzles.Day12
                 var split = line.Replace("<", "").Replace(">", "").Split(",");
                 _moons.Add(new Moon()
                 {
-                    Position = new Vector3(
+                    Position = new Vector3Int(
                         int.Parse(split[0].Split("=")[1]),
                         int.Parse(split[1].Split("=")[1]),
                         int.Parse(split[2].Split("=")[1])),
-                    Velocity = new Vector3(0, 0, 0),
+                    Velocity = new Vector3Int(0, 0, 0),
                 });
             }
         }

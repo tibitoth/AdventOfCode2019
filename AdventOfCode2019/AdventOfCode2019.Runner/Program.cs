@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using AdventOfCode2019.Puzzles.Day10;
 using AdventOfCode2019.Puzzles.Day11;
 using AdventOfCode2019.Puzzles.Day12;
+using AdventOfCode2019.Puzzles.Day13;
 using AdventOfCode2019.Puzzles.Day14;
 using AdventOfCode2019.Puzzles.Day6;
 using AdventOfCode2019.Puzzles.Day7;
@@ -55,6 +56,7 @@ namespace AdventOfCode2018.Day1
                     services.AddTransient<SpacePolice>();
                     services.AddTransient<SpaceStoichiometry>();
                     services.AddTransient<TheNBodyProblem>();
+                    services.AddTransient<CarePackage>();
 
                     services.AddHttpClient<PuzzleClient>()
                         .ConfigureHttpClient(c => c.BaseAddress = new Uri(option.BaseUrl))

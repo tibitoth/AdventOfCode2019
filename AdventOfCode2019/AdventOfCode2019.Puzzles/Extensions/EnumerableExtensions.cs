@@ -29,5 +29,12 @@ namespace AdventOfCode2019.Puzzles.Extensions
                 .GroupBy(x => x.inx / maxItems)
                 .Select(g => g.Select(x => x.item));
         }
+
+        public static IAsyncEnumerable<IEnumerable<T>> Batch<T>(this IAsyncEnumerable<T> items, int maxItems)
+        {
+            return items.Select((item, inx) => new { item, inx })
+                .GroupBy(x => x.inx / maxItems)
+                .Select(g => g.Select(x => x.item).ToEnumerable());
+        }
     }
 }
