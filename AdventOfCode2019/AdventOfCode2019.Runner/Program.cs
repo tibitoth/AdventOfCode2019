@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
+using AdventOfCode2019.Puzzles;
 using AdventOfCode2019.Puzzles.Day10;
 using AdventOfCode2019.Puzzles.Day11;
 using AdventOfCode2019.Puzzles.Day12;
@@ -57,6 +58,8 @@ namespace AdventOfCode2018.Day1
                     services.AddTransient<SpaceStoichiometry>();
                     services.AddTransient<TheNBodyProblem>();
                     services.AddTransient<CarePackage>();
+                    services.AddTransient<FlawedFrequencyTransmission>();
+                    services.Configure<FlawedFrequencyTransmissionParameters>(ctx.Configuration.GetSection(nameof(FlawedFrequencyTransmissionParameters)));
 
                     services.AddHttpClient<PuzzleClient>()
                         .ConfigureHttpClient(c => c.BaseAddress = new Uri(option.BaseUrl))
