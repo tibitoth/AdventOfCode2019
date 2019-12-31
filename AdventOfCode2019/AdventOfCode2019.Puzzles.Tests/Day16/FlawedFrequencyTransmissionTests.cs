@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AdventOfCode2019.Puzzles.Extensions;
@@ -20,7 +21,7 @@ namespace AdventOfCode2019.Puzzles.Tests.Day16
             var subject = new FlawedFrequencyTransmission(Options.Create(new FlawedFrequencyTransmissionParameters() { PhaseCount = 4 }));
 
             // Act
-            var result = subject.CreatePattern(10, iteration);
+            var result = Enumerable.Range(0, 10).Select(x => subject.GetPatternItem(x, iteration)).ToArray();
 
             // Assert
             Assert.Equal(expectedPattern, result);

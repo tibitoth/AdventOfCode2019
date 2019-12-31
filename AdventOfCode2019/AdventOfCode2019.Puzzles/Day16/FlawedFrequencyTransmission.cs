@@ -21,19 +21,11 @@ namespace AdventOfCode2019.Puzzles
             _option = option.Value;
         }
 
-        internal int[] CreatePattern(int length, int iteration)
-        {
-            var basePattern = new[] { 0, 1, 0, -1 };
+        private readonly int[] _basePattern = new[] { 0, 1, 0, -1 };
 
-            var iterationBasePattern = basePattern.SelectMany(p => Enumerable.Range(0, iteration).Select(i => p)).Take(length + 1);
-            if (iterationBasePattern.Count() - 1 >= length)
-            {
-                return iterationBasePattern.Take(length + 1).Skip(1).ToArray();
-            }
-            else
-            {
-                return Enumerable.Repeat(iterationBasePattern, length).SelectMany(p => p).Take(length + 1).Skip(1).ToArray();
-            }
+        internal int GetPatternItem(int index, int iteration)
+        {
+            return _basePattern[((index + 1) / iteration) % _basePattern.Length];
         }
 
         internal int[] CalculateOutput(int[] signal)
@@ -42,11 +34,17 @@ namespace AdventOfCode2019.Puzzles
             {
                 var newSignal = new int[signal.Length];
 
-                for (int j = 0; j < signal.Length; j++)
+                Parallel.For(0, signal.Length, j =>
                 {
-                    var pattern = CreatePattern(signal.Length, j + 1);
-                    newSignal[j] = Math.Abs(Enumerable.Range(0, signal.Length).Select(k => signal[k] * pattern[k]).Sum() % 10);
-                }
+                    int sum = 0;
+                    for (int k = 0; k < signal.Length; k++)
+                    {
+                        sum += signal[k] * GetPatternItem(k, j + 1);
+                        //sum += signal[k] * _basePattern[((k + 1) / (j + 1)) % _basePattern.Length];
+                    }
+
+                    newSignal[j] = Math.Abs(sum % 10);
+                });
 
                 signal = newSignal;
             }
