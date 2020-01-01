@@ -11,17 +11,6 @@ using AdventOfCode2019.Puzzles.Extensions;
 
 namespace AdventOfCode2019.Puzzles.Day10
 {
-    public class Asteroid
-    {
-        public Vector2 Coord { get; set; }
-        public HashSet<Vector2> Hidden { get; set; } = new HashSet<Vector2>();
-
-        public Asteroid(int x, int y)
-        {
-            Coord = new Vector2(x, y);
-        }
-    }
-
     [Day(10)]
     public class MonitoringStation : IPuzzleSolver
     {
@@ -32,7 +21,7 @@ namespace AdventOfCode2019.Puzzles.Day10
             return (asteroids.Count - 1 - GetLaser(asteroids).Hidden.Count).ToString();
         }
 
-        private async Task<List<Asteroid>> GetAsteroidsAsync(Stream input)
+        internal async Task<List<Asteroid>> GetAsteroidsAsync(Stream input)
         {
             var asteroids = new List<Asteroid>();
 
@@ -56,7 +45,7 @@ namespace AdventOfCode2019.Puzzles.Day10
             return asteroids;
         }
 
-        private Asteroid GetLaser(List<Asteroid> asteroids)
+        internal Asteroid GetLaser(List<Asteroid> asteroids)
         {
             foreach (var from in asteroids)
             {
@@ -71,16 +60,16 @@ namespace AdventOfCode2019.Puzzles.Day10
         {
             var asteroids = await GetAsteroidsAsync(input);
             var laser = GetLaser(asteroids);
-            var a200 = Get200thAsteroid(asteroids, laser);
+            var a200 = GetVaporizedAsteroids(asteroids, laser).Skip(199).First();
 
             return (a200.X * 100 + a200.Y).ToString();
         }
 
-        private Vector2 Get200thAsteroid(List<Asteroid> asteroids, Asteroid laser)
+        internal IEnumerable<Vector2> GetVaporizedAsteroids(List<Asteroid> asteroids, Asteroid laser)
         {
             int i = 1;
 
-            while (true)
+            while (asteroids.Count > 1)
             {
                 FillHiddenAsteroids(asteroids, laser);
 
@@ -102,10 +91,7 @@ namespace AdventOfCode2019.Puzzles.Day10
 
                     asteroids.Remove(min);
                     currentIteration.Remove(min);
-                    if (i == 200)
-                    {
-                        return min.Coord;
-                    }
+                    yield return min.Coord;
 
                     i++;
                 }
