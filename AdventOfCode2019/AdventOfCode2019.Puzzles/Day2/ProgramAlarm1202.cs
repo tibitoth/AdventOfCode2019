@@ -10,12 +10,20 @@ using System.Text.Unicode;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using AdventOfCode2019.Puzzles.Intcode;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AdventOfCode2019.Puzzles.Day2
 {
     [Day(2)]
     public class ProgramAlarm1202 : IPuzzleSolver
     {
+        private readonly IServiceProvider _serviceProvider;
+
+        public ProgramAlarm1202(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
         public async Task<Stream> PrepareInputAsync(Stream input, int part)
         {
             if (part == 1)
@@ -39,8 +47,9 @@ namespace AdventOfCode2019.Puzzles.Day2
         {
             var line = await input.ReadLineAsync();
             long[] registers = line.Split(',').Select(x => long.Parse(x)).ToArray();
+            var program = _serviceProvider.GetRequiredService<IIntcodeProgram>();
+            program.Init(registers);
 
-            var program = new IntcodeProgram(registers);
             await program.RunAsync(Channel.CreateUnbounded<long>(), Channel.CreateUnbounded<long>());
 
             return program[0].ToString();
@@ -57,7 +66,8 @@ namespace AdventOfCode2019.Puzzles.Day2
                 {
                     registers[1] = noun;
                     registers[2] = verb;
-                    var program = new IntcodeProgram(registers.ToArray()); // array copy
+                    var program = _serviceProvider.GetRequiredService<IIntcodeProgram>();
+                    program.Init(registers);
                     await program.RunAsync(Channel.CreateUnbounded<long>(), Channel.CreateUnbounded<long>());
 
                     if (program[0] == 19690720)

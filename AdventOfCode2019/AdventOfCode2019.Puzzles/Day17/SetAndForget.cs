@@ -16,16 +16,23 @@ namespace AdventOfCode2019.Puzzles.Day17
     [Day(17)]
     public class SetAndForget : IPuzzleSolver
     {
+        private readonly IIntcodeProgram _intcodeProgram;
+
+        public SetAndForget(IIntcodeProgram intcodeProgram)
+        {
+            _intcodeProgram = intcodeProgram;
+        }
+
         public async Task<string> SolvePart1Async(Stream input)
         {
             var line = await input.ReadLineAsync();
             var registers = line.Split(',').Select(x => long.Parse(x)).ToArray();
 
-            var program = new IntcodeProgram(registers);
+            _intcodeProgram.Init(registers);
 
             var outputChannel = Channel.CreateUnbounded<long>();
             var inputChannel = Channel.CreateUnbounded<long>();
-            await program.RunAsync(inputChannel, outputChannel);
+            await _intcodeProgram.RunAsync(inputChannel, outputChannel);
 
             return (await GetAlignmentParametersAsync(outputChannel)).ToString();
         }

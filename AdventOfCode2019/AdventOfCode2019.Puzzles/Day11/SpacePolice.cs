@@ -17,10 +17,12 @@ namespace AdventOfCode2019.Puzzles.Day11
     public class SpacePolice : IPuzzleSolver
     {
         private readonly ILogger<SpacePolice> _logger;
+        private readonly IIntcodeProgram _intcodeProgram;
 
-        public SpacePolice(ILogger<SpacePolice> logger)
+        public SpacePolice(ILogger<SpacePolice> logger, IIntcodeProgram intcodeProgram)
         {
             _logger = logger;
+            _intcodeProgram = intcodeProgram;
         }
 
         public async Task<string> SolvePart1Async(Stream input)
@@ -28,19 +30,16 @@ namespace AdventOfCode2019.Puzzles.Day11
             var line = await input.ReadLineAsync();
             var registers = line.Split(',').Select(x => long.Parse(x)).ToArray();
 
-            var program = new IntcodeProgram(registers);
-
-            return (await GetPaintedPanelsAsync(program, PaintedColor.Black)).Count.ToString();
+            return (await GetPaintedPanelsAsync(_intcodeProgram, PaintedColor.Black)).Count.ToString();
         }
 
         public async Task<string> SolvePart2Async(Stream input)
         {
             var line = await input.ReadLineAsync();
             var registers = line.Split(',').Select(x => long.Parse(x)).ToArray();
+            _intcodeProgram.Init(registers);
 
-            var program = new IntcodeProgram(registers);
-
-            var panels = await GetPaintedPanelsAsync(program, PaintedColor.White);
+            var panels = await GetPaintedPanelsAsync(_intcodeProgram, PaintedColor.White);
 
             var s = new StringBuilder();
 

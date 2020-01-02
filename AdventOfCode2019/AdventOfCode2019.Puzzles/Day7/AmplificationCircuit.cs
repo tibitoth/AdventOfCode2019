@@ -11,12 +11,20 @@ using AdventOfCode2019.Puzzles.Extensions;
 using AdventOfCode2019.Puzzles.Intcode;
 using AdventOfCode2019.Puzzles.Intcode.Instructions.IO;
 using AdventOfCode2019.Puzzles.Tests.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AdventOfCode2019.Puzzles.Day7
 {
     [Day(7)]
     public class AmplificationCircuit : IPuzzleSolver
     {
+        private readonly IServiceProvider _serviceProvider;
+
+        public AmplificationCircuit(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
         public async Task<string> SolvePart1Async(Stream input)
         {
             return (await GetMaxThrusterSignalAsync(input, PhaseSettingsType.OneShot)).MaxSignal.ToString();
@@ -44,14 +52,15 @@ namespace AdventOfCode2019.Puzzles.Day7
             foreach (var p in phaseSettingsRange.GetPermutations())
             {
                 var permutation = p.ToArray();
-                var amplifiers = new (IntcodeProgram Program, Channel<long> Input)[5];
+                var amplifiers = new (IIntcodeProgram Program, Channel<long> Input)[5];
                 for (int i = 0; i < amplifiers.Length; i++)
                 {
                     var inputChannel = Channel.CreateUnbounded<long>();
                     await inputChannel.Writer.WriteAsync(permutation[i]);
 
-                    // copy registers
-                    amplifiers[i] = (new IntcodeProgram(registers.ToArray()), inputChannel);
+                    var program = _serviceProvider.GetRequiredService<IIntcodeProgram>();
+                    program.Init(registers.ToArray()); // copy registers
+                    amplifiers[i] = (program, inputChannel);
                 }
 
                 // initial input is 0

@@ -71,7 +71,7 @@ namespace AdventOfCode2019.Puzzles.Tests.Day16
             Assert.Equal("19944447", result);
         }
 
-        [Theory]
+        [Theory(Skip = "not performant")]
         [InlineData("03036732577212944063491565474664", "84462026")]
         [InlineData("02935109699940807407585447034323", "78725270")]
         [InlineData("03081770884921959731165446850517", "53553731")]

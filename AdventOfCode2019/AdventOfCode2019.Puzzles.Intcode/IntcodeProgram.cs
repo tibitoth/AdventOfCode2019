@@ -9,19 +9,21 @@ using AdventOfCode2019.Puzzles.Intcode.Instructions.Arithmetic;
 using AdventOfCode2019.Puzzles.Intcode.Instructions.Boolean;
 using AdventOfCode2019.Puzzles.Intcode.Instructions.Control;
 using AdventOfCode2019.Puzzles.Intcode.Instructions.IO;
+using Microsoft.Extensions.Logging;
 
 namespace AdventOfCode2019.Puzzles.Intcode
 {
     public class IntcodeProgram : IIntcodeProgram
     {
+        private readonly ILogger<IntcodeProgram> _logger;
+
         private ChannelReader<long> _inputReader;
         private ChannelWriter<long> _outputWriter;
+        private ProgramContext _programContext;
 
-        private readonly ProgramContext _programContext;
-
-        public IntcodeProgram(long[] registers)
+        public IntcodeProgram(ILogger<IntcodeProgram> logger)
         {
-            _programContext = new ProgramContext(registers);
+            _logger = logger;
         }
 
         public async Task RunAsync(Channel<long> input, Channel<long> output)
@@ -33,6 +35,11 @@ namespace AdventOfCode2019.Puzzles.Intcode
             {
                 _programContext.InstructionPointer = await instruction.ExecuteAsync();
             }
+        }
+
+        public void Init(long[] registers)
+        {
+            _programContext = new ProgramContext(registers);
         }
 
         public long this[int index] => _programContext[index];
@@ -62,7 +69,7 @@ namespace AdventOfCode2019.Puzzles.Intcode
                 99 => new Halt(_programContext),
                 1 => new Add(_programContext),
                 2 => new Multiply(_programContext),
-                3 => new Input(_programContext, _inputReader),
+                3 => new Input(_programContext, _inputReader, _logger),
                 4 => new Output(_programContext, _outputWriter),
                 5 => new JumpIfTrue(_programContext),
                 6 => new JumpIfFalse(_programContext),

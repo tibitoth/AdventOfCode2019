@@ -22,6 +22,7 @@ using AdventOfCode2019.Puzzles.Day6;
 using AdventOfCode2019.Puzzles.Day7;
 using AdventOfCode2019.Puzzles.Day8;
 using AdventOfCode2019.Puzzles.Day9;
+using AdventOfCode2019.Puzzles.Intcode;
 
 namespace AdventOfCode2018.Day1
 {
@@ -43,6 +44,8 @@ namespace AdventOfCode2018.Day1
                     var option = services.RegisterOption<AdventOfCodeOptions>(ctx.Configuration);
                     services.AddTransient<PuzzleClientCookieHandler>();
                     services.AddTransient<IPuzzleSolverFactory, PuzzleSolverFactory>();
+
+                    services.AddTransient<IIntcodeProgram, IntcodeProgram>();
 
                     services.AddTransient<TheTyrannyOfTheRocketEquation>();
                     services.AddTransient<ProgramAlarm1202>();

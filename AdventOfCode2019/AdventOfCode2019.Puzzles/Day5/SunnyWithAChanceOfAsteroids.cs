@@ -16,14 +16,20 @@ namespace AdventOfCode2019.Puzzles.Day5
     [Day(5)]
     public class SunnyWithAChanceOfAsteroids : IPuzzleSolver
     {
+        private IIntcodeProgram _program;
+
+        public SunnyWithAChanceOfAsteroids(IIntcodeProgram program)
+        {
+            _program = program;
+        }
+
         public async Task<string> SolvePart1Async(Stream input)
         {
             var line = await input.ReadLineAsync();
             var registers = line.Split(',').Select(x => long.Parse(x)).ToArray();
-
-            var program = new IntcodeProgram(registers);
+            _program.Init(registers);
             var outputChannel = Channel.CreateUnbounded<long>();
-            await program.RunAsync(await 1.ToChannelAsync(), outputChannel);
+            await _program.RunAsync(await 1.ToChannelAsync(), outputChannel);
             return (await outputChannel.Reader.ReadAllAsync().LastAsync()).ToString();
         }
 
@@ -31,10 +37,10 @@ namespace AdventOfCode2019.Puzzles.Day5
         {
             var line = await input.ReadLineAsync();
             var registers = line.Split(',').Select(x => long.Parse(x)).ToArray();
+            _program.Init(registers);
 
-            var program = new IntcodeProgram(registers);
             var outputChannel = Channel.CreateUnbounded<long>();
-            await program.RunAsync(await 5.ToChannelAsync(), outputChannel);
+            await _program.RunAsync(await 5.ToChannelAsync(), outputChannel);
             return (await outputChannel.Reader.ReadAllAsync().LastAsync()).ToString();
         }
     }
