@@ -19,6 +19,7 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.IO
         public override async Task<int> ExecuteAsync()
         {
             await _writer.WriteAsync(Param);
+            await Task.Yield();
 
             return await base.ExecuteAsync();
         }

@@ -10,6 +10,7 @@ using AdventOfCode2018.Infrastructure;
 using AdventOfCode2019.Infrastructure;
 using AdventOfCode2019.Puzzles.Extensions;
 using AdventOfCode2019.Puzzles.Intcode;
+using Microsoft.Extensions.Logging;
 
 namespace AdventOfCode2019.Puzzles.Day13
 {
@@ -33,24 +34,27 @@ namespace AdventOfCode2019.Puzzles.Day13
     {
         TopLeft = 1,
         TopRight = 2,
-        BottomLeft = 3, 
-        BottomRight = 4, 
+        BottomLeft = 3,
+        BottomRight = 4,
     }
 
     [Day(13)]
     public class CarePackage : IPuzzleSolver
     {
         private readonly IIntcodeProgram _intcodeProgram;
+        private readonly ILogger<CarePackage> _logger;
 
         private Dictionary<(long x, long y), TileType> _tiles;
         //private TileType[,] _tiles;
         private (long x, long y) _ball;
         private (long x, long y) _paddle;
         private long _score;
+        private bool _initialized;
 
-        public CarePackage(IIntcodeProgram intcodeProgram)
+        public CarePackage(IIntcodeProgram intcodeProgram, ILogger<CarePackage> logger)
         {
             _intcodeProgram = intcodeProgram;
+            _logger = logger;
         }
 
         public async Task<string> SolvePart1Async(Stream input)
@@ -76,81 +80,100 @@ namespace AdventOfCode2019.Puzzles.Day13
         {
             _tiles = new Dictionary<(long x, long y), TileType>();
             _ball = (0, 0);
-            var paddleTargetX = 0;
+            _initialized = false;
 
             while (await output.Reader.WaitToReadAsync())
-            //await foreach (var tileData in output.Reader.ReadAllAsync().Batch(3))
             {
                 var coord = (x: await output.Reader.ReadAsync(), y: await output.Reader.ReadAsync());
                 var data = await output.Reader.ReadAsync();
                 if (coord.x == -1 && coord.y == 0)
                 {
+                    _logger.LogDebug("Getting Score data");
+                    _initialized = true;
                     _score = data;
-                    //var width = _tilesDictionary.Keys.Max(k => k.x) - _tilesDictionary.Keys.Min(k => k.x);
-                    //var height = _tilesDictionary.Keys.Max(k => k.y) - _tilesDictionary.Keys.Min(k => k.y);
-                    //_tiles = new TileType[width, height];
-                    await Task.Delay(1000);
+                    Input(input);
+                    Draw();
+
+                    await Task.Delay(0);
                 }
                 else
                 {
                     var type = (TileType)data;
                     if (type == TileType.Ball)
                     {
-                        //if (paddleTargetX > 0)
-                        //{
-                        //    input.Reader.TryRead(out _);
-                        //    await input.Writer.WriteAsync(1);
-                        //    paddleTargetX--;
-                        //}
-                        //else if (paddleTargetX == 0)
-                        //{
-                        //    input.Reader.TryRead(out _);
-                        //    input.Writer.TryWrite(0);
-                        //}
-                        //else if (paddleTargetX < 0)
-                        //{
-                        //    input.Reader.TryRead(out _);
-                        //    await input.Writer.WriteAsync(-1);
-                        //    paddleTargetX--;
-                        //}
+                        _logger.LogDebug("Getting ball data");
+
+                        Input(input);
 
                         _ball = coord;
                         _tiles[coord] = type;
 
-                        // ball hit paddle, need to move to the next calculated hit location
-                        //if (_paddle.y == _ball.y + 1 && _paddle.x == _ball.x)
-                        //{
-                        //    paddleTargetX = 6;
-                        //}
-
-                       
-
                         Draw();
-                        await Task.Delay(1000);
+                        await Task.Delay(0);
                     }
                     else if (type == TileType.Paddle)
                     {
+                        _logger.LogDebug("Getting paddle data");
+
+                        Input(input);
+
                         _paddle = coord;
                         _tiles[coord] = type;
                         Draw();
-                        await Task.Delay(1000);
-                    } 
+                        await Task.Delay(0);
+                    }
                     else if (type == TileType.Block || type == TileType.Empty || type == TileType.Wall)
                     {
+                        //_logger.LogDebug("Getting {0} data", type);
+
+                        Input(input);
+
                         _tiles[coord] = type;
                         Draw();
-                        //_tiles[coord.x, coord.y] = type;
                     }
                 }
-
-                
             }
+        }
+
+        private void Input(Channel<long> input)
+        {
+            if (!_initialized) return;
+
+            //if (Console.KeyAvailable)
+            //{
+            //    var key = Console.ReadKey(true);
+            //    if (key.Key == ConsoleKey.RightArrow)
+            //    {
+            //        input.Reader.TryRead(out _);
+            //        var r = input.Writer.TryWrite(1);
+            //    }
+
+            //    if (key.Key == ConsoleKey.LeftArrow)
+            //    {
+            //        input.Reader.TryRead(out _);
+            //        var r = input.Writer.TryWrite(-1);
+            //    }
+            //}
+            //else
+            //{
+            //    if (input.Reader.TryRead(out long x))
+            //    {
+            //        var r = input.Writer.TryWrite(x);
+            //    }
+            //    else
+            //    {
+            //        var r = input.Writer.TryWrite(0);
+            //    }
+            //}
         }
 
         private void Draw()
         {
+            //if (!_initialized) return;
+
             //Console.Clear();
-            Console.WriteLine($"Score: {_score}");
+            var sb = new StringBuilder();
+            sb.Append($"Score: {_score}\n");
             foreach (var g in _tiles.OrderBy(k => k.Key.y).GroupBy(k => k.Key.y))
             {
                 var line = new string(g.OrderBy(g => g.Key.x).Select(g => g.Value switch
@@ -161,8 +184,11 @@ namespace AdventOfCode2019.Puzzles.Day13
                     TileType.Block => 'X',
                     TileType.Ball => '0',
                 }).ToArray());
-                Console.WriteLine(line);
+                sb.Append(line);
+                sb.Append(Environment.NewLine);
             }
+
+            Console.WriteLine(sb.ToString());
         }
 
         public async Task<string> SolvePart2Async(Stream input)
@@ -176,72 +202,13 @@ namespace AdventOfCode2019.Puzzles.Day13
 
             var output = Channel.CreateUnbounded<long>();
             var inputChannel = Channel.CreateBounded<long>(1);
-            
 
             var programTask = _intcodeProgram.RunAsync(inputChannel, output);
 
             var gameTask = RunGameAsync(output, inputChannel);
-            var idleKeyboardTask = Task.Run(async () =>
-            {
-                while (!gameTask.IsCompleted)
-                {
-                    lock (_intcodeProgram)
-                    {
-                        inputChannel.Writer.TryWrite(0);
-                    }
-                }
-            });
-
-            var kKeyboardTask = Task.Run(() =>
-            {
-                while (!gameTask.IsCompleted)
-                {
-                    var key = Console.ReadKey(true);
-                    if (key.Key == ConsoleKey.RightArrow)
-                    {
-                        lock (_intcodeProgram)
-                        {
-                            inputChannel.Reader.TryRead(out _);
-                            inputChannel.Writer.TryWrite(1);
-                        }
-                    }
-
-                    if (key.Key == ConsoleKey.LeftArrow)
-                    {
-                        lock (_intcodeProgram)
-                        {
-                            inputChannel.Reader.TryRead(out _);
-                            inputChannel.Writer.TryWrite(-1);
-                        }
-                    }
-                }
-            });
-
-
-            //LowLevelKeyboardHook kbh = new LowLevelKeyboardHook();
-            //kbh.OnKeyPressed += async (sender, key) =>
-            //{
-            //    if (key == ConsoleKey.RightArrow)
-            //    {
-            //        inputChannel.Reader.TryRead(out _);
-            //        await inputChannel.Writer.WriteAsync(1);
-            //    }
-
-            //    if (key == ConsoleKey.LeftArrow)
-            //    {
-            //        inputChannel.Reader.TryRead(out _);
-            //        await inputChannel.Writer.WriteAsync(-1);
-            //    }
-            //};
-
-
-
-            //kbh.HookKeyboard();
 
             await gameTask;
             await programTask;
-
-            //kbh.UnHookKeyboard();
 
             return _score.ToString();
         }
