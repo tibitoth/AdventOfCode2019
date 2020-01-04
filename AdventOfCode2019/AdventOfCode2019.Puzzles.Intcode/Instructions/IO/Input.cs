@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace AdventOfCode2019.Puzzles.Intcode.Instructions.IO
 {
@@ -19,24 +21,56 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.IO
             _logger = logger;
         }
 
+        private static List<long> Movements = new List<long>();
+        private static int currentIndex = 0;
+
         public override async Task<int> ExecuteAsync()
         {
             _logger.LogDebug("Reading from input");
 
-            //ProgramContext[(int)Param] = await _reader.ReadAsync();
-            //if (Console.KeyAvailable)
-            //{
-            ProgramContext[(int)Param] = Console.ReadKey(true).Key switch
+            long? GetInput()
             {
-                ConsoleKey.RightArrow => 1,
-                ConsoleKey.LeftArrow => -1,
-                _ => 0,
-            };
-            //}
-            //else
-            //{
-            //    ProgramContext[(int) Param] = 0;
-            //}
+                if (currentIndex < Movements.Count)
+                {
+                    return Movements[currentIndex++];
+                }
+
+                ConsoleKey c;
+                switch (Console.ReadKey(true).Key)
+                {
+                    case ConsoleKey.RightArrow:
+                        Movements.Add(1);
+                        currentIndex++;
+                        return 1;
+                    case ConsoleKey.LeftArrow:
+                        Movements.Add(-1);
+                        currentIndex++;
+                        return -1;
+                    case ConsoleKey.S:
+                        var json = JsonConvert.SerializeObject(Movements);
+                        File.WriteAllText("day13.data", json);
+                        break;
+                    case ConsoleKey.L:
+                        var json2 = File.ReadAllText("day13.data");
+                        Movements = JsonConvert.DeserializeObject<List<long>>(json2);
+                        currentIndex = 0;
+                        break;
+                    default:
+                        Movements.Add(0);
+                        currentIndex++;
+                        return 0;
+                }
+
+                return null;
+            }
+
+            long? i;
+            do
+            {
+                i = GetInput();
+            } while (i == null);
+
+            ProgramContext[(int) Param] = i.Value;
 
             //ProgramContext[(int)Param] = await _reader.ReadAsync();
 

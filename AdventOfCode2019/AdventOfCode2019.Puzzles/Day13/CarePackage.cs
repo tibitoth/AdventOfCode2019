@@ -124,8 +124,6 @@ namespace AdventOfCode2019.Puzzles.Day13
                     }
                     else if (type == TileType.Block || type == TileType.Empty || type == TileType.Wall)
                     {
-                        //_logger.LogDebug("Getting {0} data", type);
-
                         Input(input);
 
                         _tiles[coord] = type;
@@ -169,9 +167,6 @@ namespace AdventOfCode2019.Puzzles.Day13
 
         private void Draw()
         {
-            //if (!_initialized) return;
-
-            //Console.Clear();
             var sb = new StringBuilder();
             sb.Append($"Score: {_score}\n");
             foreach (var g in _tiles.OrderBy(k => k.Key.y).GroupBy(k => k.Key.y))
@@ -210,7 +205,7 @@ namespace AdventOfCode2019.Puzzles.Day13
             await gameTask;
             await programTask;
 
-            return _score.ToString();
+            return _score.ToString(); // 13331
         }
     }
 }
