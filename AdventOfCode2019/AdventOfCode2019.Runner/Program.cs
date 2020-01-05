@@ -18,6 +18,7 @@ using AdventOfCode2019.Puzzles.Day12;
 using AdventOfCode2019.Puzzles.Day13;
 using AdventOfCode2019.Puzzles.Day14;
 using AdventOfCode2019.Puzzles.Day17;
+using AdventOfCode2019.Puzzles.Day19;
 using AdventOfCode2019.Puzzles.Day6;
 using AdventOfCode2019.Puzzles.Day7;
 using AdventOfCode2019.Puzzles.Day8;
@@ -65,6 +66,7 @@ namespace AdventOfCode2018.Day1
                     services.AddTransient<FlawedFrequencyTransmission>();
                     services.Configure<FlawedFrequencyTransmissionParameters>(ctx.Configuration.GetSection(nameof(FlawedFrequencyTransmissionParameters)));
                     services.AddTransient<SetAndForget>();
+                    services.AddTransient<TractorBeam>();
 
                     services.AddHttpClient<PuzzleClient>()
                         .ConfigureHttpClient(c => c.BaseAddress = new Uri(option.BaseUrl))

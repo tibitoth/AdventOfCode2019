@@ -26,55 +26,55 @@ namespace AdventOfCode2019.Puzzles.Intcode.Instructions.IO
 
         public override async Task<int> ExecuteAsync()
         {
-            _logger.LogDebug("Reading from input");
+            //_logger.LogDebug("Reading from input");
 
-            long? GetInput()
-            {
-                if (currentIndex < Movements.Count)
-                {
-                    return Movements[currentIndex++];
-                }
+            //long? GetInput()
+            //{
+            //    if (currentIndex < Movements.Count)
+            //    {
+            //        return Movements[currentIndex++];
+            //    }
 
-                ConsoleKey c;
-                switch (Console.ReadKey(true).Key)
-                {
-                    case ConsoleKey.RightArrow:
-                        Movements.Add(1);
-                        currentIndex++;
-                        return 1;
-                    case ConsoleKey.LeftArrow:
-                        Movements.Add(-1);
-                        currentIndex++;
-                        return -1;
-                    case ConsoleKey.S:
-                        var json = JsonConvert.SerializeObject(Movements);
-                        File.WriteAllText("day13.data", json);
-                        break;
-                    case ConsoleKey.L:
-                        var json2 = File.ReadAllText("day13.data");
-                        Movements = JsonConvert.DeserializeObject<List<long>>(json2);
-                        currentIndex = 0;
-                        break;
-                    default:
-                        Movements.Add(0);
-                        currentIndex++;
-                        return 0;
-                }
+            //    ConsoleKey c;
+            //    switch (Console.ReadKey(true).Key)
+            //    {
+            //        case ConsoleKey.RightArrow:
+            //            Movements.Add(1);
+            //            currentIndex++;
+            //            return 1;
+            //        case ConsoleKey.LeftArrow:
+            //            Movements.Add(-1);
+            //            currentIndex++;
+            //            return -1;
+            //        case ConsoleKey.S:
+            //            var json = JsonConvert.SerializeObject(Movements);
+            //            File.WriteAllText("day13.data", json);
+            //            break;
+            //        case ConsoleKey.L:
+            //            var json2 = File.ReadAllText("day13.data");
+            //            Movements = JsonConvert.DeserializeObject<List<long>>(json2);
+            //            currentIndex = 0;
+            //            break;
+            //        default:
+            //            Movements.Add(0);
+            //            currentIndex++;
+            //            return 0;
+            //    }
 
-                return null;
-            }
+            //    return null;
+            //}
 
-            long? i;
-            do
-            {
-                i = GetInput();
-            } while (i == null);
+            //long? i;
+            //do
+            //{
+            //    i = GetInput();
+            //} while (i == null);
 
-            ProgramContext[(int) Param] = i.Value;
+            //ProgramContext[(int) Param] = i.Value;
 
-            //ProgramContext[(int)Param] = await _reader.ReadAsync();
+            ProgramContext[(int)Param] = await _reader.ReadAsync();
 
-            _logger.LogDebug("Input has been read: {0}", ProgramContext[(int)Param]);
+            //_logger.LogDebug("Input has been read: {0}", ProgramContext[(int)Param]);
 
             return await base.ExecuteAsync();
         }
